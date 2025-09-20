@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/visitantesdb
+      SPRING_DATASOURCE_USERNAME: gerson
+      SPRING_DATASOURCE_PASSWORD: senha123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8081:80"
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: visitantesdb
+      POSTGRES_USER: gerson
+      POSTGRES_PASSWORD: senha123
+    ports:
+      - "5433:5432"  # <-- porta alterada para 5433 no host
