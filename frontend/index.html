@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Visitantes</title>
+</head>
+<body>
+  <h1>Registro de Visitantes</h1>
+  <form id="formVisitante">
+    <label>CPF:</label>
+    <input type="text" id="cpf" required><br>
+
+    <label>Nome:</label>
+    <input type="text" id="nome" required><br>
+
+    <label>Morador:</label>
+    <input type="text" id="morador" required><br>
+
+    <label>Condomínio:</label>
+    <input type="text" id="condominio" required><br>
+
+    <button type="submit">Registrar</button>
+  </form>
+
+  <p id="mensagem"></p>
+
+  <script>
+    const form = document.getElementById('formVisitante');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const documento = document.getElementById('cpf').value;
+      const nome = document.getElementById('nome').value;
+      const morador = document.getElementById('morador').value;
+      const condominio = document.getElementById('condominio').value;
+
+      try {
+        const consulta = await fetch(`http://localhost:8080/visitantes/${documento}`);
+        if (consulta.ok) {
+          mensagem.textContent = "⚠️ Visitante já está registrado.";
+          return;
+        }
+
+        const resposta = await fetch('http://localhost:8080/visitantes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ documento, nome, morador, condominio })
+        });
+
+        const texto = await resposta.text();
+        mensagem.textContent = texto;
+      } catch (erro) {
+        mensagem.textContent = "❌ Erro ao registrar visitante.";
+        console.error(erro);
+      }
+    });
+  </script>
+</body>
+</html>
