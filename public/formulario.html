@@ -20,5 +20,42 @@
 
         <button type="submit">Enviar</button>
     </form>
+
+    <script>
+        // Adiciona um listener para capturar o envio do formulário
+        document.getElementById("form-visitante").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Captura os dados do formulário
+            const formData = new FormData(event.target);
+            const data = {
+                nome: formData.get("nome"),
+                documento: formData.get("documento"),
+                dataVisita: formData.get("dataVisita"),
+            };
+
+            try {
+                // Envia os dados para o backend usando fetch
+                const response = await fetch("/visitantes", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message); // Exibe a mensagem de sucesso
+                } else {
+                    const error = await response.json();
+                    alert(error.message); // Exibe a mensagem de erro
+                }
+            } catch (err) {
+                console.error("Erro ao enviar os dados:", err);
+                alert("Erro ao enviar os dados. Tente novamente.");
+            }
+        });
+    </script>
 </body>
 </html>
