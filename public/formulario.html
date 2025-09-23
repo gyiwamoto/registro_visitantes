@@ -8,15 +8,47 @@
 </head>
 <body>
     <h1>Cadastro de Visitantes</h1>
-    <form action="/visitantes" method="POST" id="form-visitante">
-        <label for="nome">Nome:</label>
+    <form id="form-visitante">
+        <label for="nome">Nome do Visitante:</label>
         <input type="text" id="nome" name="nome" required>
 
-        <label for="documento">Documento:</label>
+        <label for="documento">Documento do Visitante:</label>
         <input type="text" id="documento" name="documento" required>
 
         <label for="dataVisita">Data da Visita:</label>
         <input type="date" id="dataVisita" name="dataVisita" required>
+
+        <label for="casa">Casa (C1 a C20):</label>
+        <select id="casa" name="casa" required>
+            <option value="">Selecione a casa</option>
+            <!-- Casas de C1 a C20 -->
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+            <option value="C3">C3</option>
+            <option value="C4">C4</option>
+            <option value="C5">C5</option>
+            <option value="C6">C6</option>
+            <option value="C7">C7</option>
+            <option value="C8">C8</option>
+            <option value="C9">C9</option>
+            <option value="C10">C10</option>
+            <option value="C11">C11</option>
+            <option value="C12">C12</option>
+            <option value="C13">C13</option>
+            <option value="C14">C14</option>
+            <option value="C15">C15</option>
+            <option value="C16">C16</option>
+            <option value="C17">C17</option>
+            <option value="C18">C18</option>
+            <option value="C19">C19</option>
+            <option value="C20">C20</option>
+        </select>
+
+        <label for="visitado">Visitado:</label>
+        <input type="text" id="visitado" name="visitado" required>
+
+        <label for="autorizador">Quem autorizou a entrada:</label>
+        <input type="text" id="autorizador" name="autorizador" required>
 
         <button type="submit">Enviar</button>
     </form>
@@ -32,6 +64,9 @@
                 nome: formData.get("nome"),
                 documento: formData.get("documento"),
                 dataVisita: formData.get("dataVisita"),
+                casa: formData.get("casa"),
+                visitado: formData.get("visitado"),
+                autorizador: formData.get("autorizador"),
             };
 
             try {
@@ -59,3 +94,4 @@
     </script>
 </body>
 </html>
+
