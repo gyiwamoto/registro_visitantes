@@ -35,6 +35,9 @@ app.post("/visitantes", (req, res) => {
         return res.status(400).json({ message: "Todos os campos são obrigatórios!" });
     }
 
+    // Log do estado atual do array visitantes
+    console.log("Estado atual do array visitantes:", visitantes);
+
     // Verifica se o visitante já foi cadastrado (baseado no documento padronizado)
     const visitanteExistente = visitantes.find(
         (visitante) => visitante.documento === documentoPadronizado
@@ -59,18 +62,23 @@ app.post("/visitantes", (req, res) => {
 
     // Adiciona o visitante ao array
     visitantes.push({ nome, documento: documentoPadronizado, dataVisita, casa, visitado, autorizador });
-    console.log("Visitantes cadastrados:", visitantes);
+    console.log("Visitante adicionado com sucesso!");
+    console.log("Estado atualizado do array visitantes:", visitantes);
 
     res.status(201).json({ message: "Visitante cadastrado com sucesso!" });
 });
 
 // Rota para listar todos os visitantes cadastrados
 app.get("/visitantes/listar", (req, res) => {
+    console.log("Requisição recebida em /visitantes/listar");
+    console.log("Visitantes cadastrados:", visitantes);
     res.status(200).json(visitantes);
 });
 
 // Rota para listar todas as casas e moradores
 app.get("/casas", (req, res) => {
+    console.log("Requisição recebida em /casas");
+    console.log("Casas cadastradas:", casas);
     res.status(200).json(casas);
 });
 
