@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Registro de Visitantes",
+    "version": "1.0.0",
+    "description": "API para gerenciamento de visitantes em condomínio"
+  },
+  "paths": {
+    "/visitantes": {
+      "get": {
+        "summary": "Listar visitantes",
+        "responses": {
+          "200": {
+            "description": "Lista de visitantes"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cadastrar visitante",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": { "type": "string" },
+                  "celular": { "type": "string" },
+                  "endereco": { "type": "string" },
+                  "data_visita": { "type": "string", "format": "date" },
+                  "visitado": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Visitante cadastrado com sucesso" }
+        }
+      }
+    }
+  }
+}
