@@ -2,245 +2,185 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Visitantes</title>
+    <title>Residencial Parque das Palmeiras - Registro de Visitantes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            padding: 30px;
         }
-        h1 { color: #333; text-align: center; }
+
+        .form-container {
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 450px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 22px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #salvar-btn { background-color: #28a745; }
+        #cancelar-btn { background-color: #dc3545; }
+        #listar-btn { background-color: #007bff; }
+
+        #mensagem {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Tabela de visitantes */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            background-color: #fff;
+            margin-top: 20px;
         }
+
         th, td {
-            padding: 10px;
             border: 1px solid #ccc;
+            padding: 8px;
             text-align: left;
         }
-        input, select {
-            padding: 5px;
-            margin: 5px 0;
-            width: 100%;
+
+        th {
+            background-color: #f8f9fa;
         }
-        button {
-            padding: 8px 12px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .form-container {
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        #mensagem {
-            font-weight: bold;
-            margin-top: 10px;
-        }
+
         .filter-container {
-            max-width: 800px;
-            margin: 0 auto 20px auto;
-            background-color: #fff;
-            padding: 15px;
-            border: 1px solid #ccc;
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-container input {
+            flex: 1;
+        }
+
+        .filter-container button {
+            flex: 0 0 120px;
         }
     </style>
 </head>
 <body>
-    <h1>Registro de Visitantes</h1>
-
-    <div class="form-container">
+    <div class="form-container" autocomplete="off">
+        <h1>Residencial Parque das Palmeiras</h1>
         <h2>Adicionar Visitante</h2>
-        <label>Nome completo:</label>
-        <input type="text" id="nome">
-        <label>CPF:</label>
-        <input type="text" id="cpf">
-        <label>Empresa (ou "Particular"):</label>
-        <input type="text" id="condominio" placeholder="Particular">
-        <label>Celular:</label>
-        <input type="text" id="contato">
-        <label>Endereço:</label>
-        <input type="text" id="endereco">
-        <label>Data da Visita:</label>
-        <input type="date" id="dataVisita">
-        <label>Razão da Visita:</label>
-        <select id="razao">
-            <option value="Entrega">Entrega</option>
-            <option value="Visita Social">Visita Social</option>
-            <option value="Prestação de Serviços">Prestação de Serviços</option>
-        </select>
-        <label>Casa/Apartamento Visitado:</label>
-        <input type="text" id="morador">
-        <label>Nome do Visitado:</label>
-        <input type="text" id="visitadoNome">
-        <label>Telefone do Visitado:</label>
-        <input type="text" id="telefoneVisitado">
-        <label>Documento:</label>
-        <input type="text" id="documento">
-        <button onclick="adicionarVisitante()">Adicionar Visitante</button>
-        <p id="mensagem"></p>
+
+        <label for="nome">Nome completo:</label>
+        <input type="text" id="nome" autocomplete="off">
+
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" autocomplete="off">
+
+        <label for="condominio">Empresa/Condomínio:</label>
+        <input type="text" id="condominio" autocomplete="off">
+
+        <label for="contato">Celular:</label>
+        <input type="text" id="contato" autocomplete="off">
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" autocomplete="off">
+
+        <label for="dataVisita">Data da Visita:</label>
+        <input type="date" id="dataVisita" autocomplete="off">
+
+        <label for="razao">Razão da Visita:</label>
+        <input type="text" id="razao" autocomplete="off">
+
+        <label for="morador">Casa/Apartamento Visitado:</label>
+        <input type="text" id="morador" autocomplete="off">
+
+        <label for="visitadoNome">Nome do Visitado:</label>
+        <input type="text" id="visitadoNome" autocomplete="off">
+
+        <label for="telefoneVisitado">Telefone do Visitado:</label>
+        <input type="text" id="telefoneVisitado" autocomplete="off">
+
+        <label for="documento">Documento:</label>
+        <input type="text" id="documento" autocomplete="off">
+
+        <div class="button-container">
+            <button id="salvar-btn">Salvar</button>
+            <button id="cancelar-btn">Cancelar</button>
+            <button id="listar-btn">Listar Visitantes</button>
+        </div>
+
+        <div class="filter-container">
+            <input type="text" id="filtroCasa" placeholder="Filtrar por casa/apto">
+            <input type="date" id="filtroData" placeholder="Filtrar por data">
+            <button id="btnListarVisitantes">Aplicar filtros</button>
+        </div>
+
+        <div id="mensagem"></div>
+
+        <table id="tabelaVisitantes">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Condomínio</th>
+                    <th>Contato</th>
+                    <th>Endereço</th>
+                    <th>Data Visita</th>
+                    <th>Razão</th>
+                    <th>Morador</th>
+                    <th>Visitado</th>
+                    <th>Telefone Visitado</th>
+                    <th>Documento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <div class="filter-container">
-        <h2>Filtrar Visitantes</h2>
-        <label>Filtrar por Casa/Apartamento:</label>
-        <input type="text" id="filtroCasa" placeholder="Digite o número">
-        <label>Filtrar por Data:</label>
-        <input type="date" id="filtroData">
-        <button onclick="listarVisitantes()">Filtrar</button>
-    </div>
-
-    <h2>Lista de Visitantes</h2>
-    <table id="tabelaVisitantes">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Empresa</th>
-                <th>Celular</th>
-                <th>Endereço</th>
-                <th>Data</th>
-                <th>Razão</th>
-                <th>Casa/Apartamento</th>
-                <th>Nome Visitado</th>
-                <th>Telefone Visitado</th>
-                <th>Documento</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <script>
-        const apiUrl = 'http://localhost:8080/visitantes';
-
-        async function listarVisitantes() {
-            const response = await fetch(apiUrl);
-            let visitantes = await response.json();
-
-            // Aplicar filtros
-            const filtroCasa = document.getElementById('filtroCasa').value.trim();
-            const filtroData = document.getElementById('filtroData').value;
-            if(filtroCasa) {
-                visitantes = visitantes.filter(v => v.morador && v.morador.includes(filtroCasa));
-            }
-            if(filtroData) {
-                visitantes = visitantes.filter(v => v.dataVisita && v.dataVisita === filtroData);
-            }
-
-            const tbody = document.querySelector('#tabelaVisitantes tbody');
-            tbody.innerHTML = '';
-            visitantes.forEach(v => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${v.id}</td>
-                    <td>${v.nome}</td>
-                    <td>${v.cpf}</td>
-                    <td>${v.condominio || 'Particular'}</td>
-                    <td>${v.contato}</td>
-                    <td>${v.endereco || ''}</td>
-                    <td>${v.dataVisita || ''}</td>
-                    <td>${v.razao || ''}</td>
-                    <td>${v.morador || ''}</td>
-                    <td>${v.visitadoNome || ''}</td>
-                    <td>${v.telefoneVisitado || ''}</td>
-                    <td>${v.documento}</td>
-                    <td>
-                        <button onclick="editarVisitante(${v.id})">Editar</button>
-                        <button onclick="deletarVisitante(${v.id})">Deletar</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function adicionarVisitante() {
-            const cpf = document.getElementById('cpf').value.trim();
-            const response = await fetch(apiUrl);
-            const existentes = await response.json();
-            const mensagemEl = document.getElementById('mensagem');
-
-            if(existentes.some(v => v.cpf === cpf)) {
-                mensagemEl.innerText = "Visitante já Cadastrado";
-                mensagemEl.style.color = "red";
-                return;
-            }
-
-            const visitante = {
-                nome: document.getElementById('nome').value,
-                cpf: cpf,
-                condominio: document.getElementById('condominio').value || 'Particular',
-                contato: document.getElementById('contato').value,
-                endereco: document.getElementById('endereco').value,
-                dataVisita: document.getElementById('dataVisita').value,
-                razao: document.getElementById('razao').value,
-                morador: document.getElementById('morador').value,
-                visitadoNome: document.getElementById('visitadoNome').value,
-                telefoneVisitado: document.getElementById('telefoneVisitado').value,
-                documento: document.getElementById('documento').value
-            };
-
-            await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(visitante)
-            });
-
-            mensagemEl.innerText = "Visitante cadastrado com sucesso!";
-            mensagemEl.style.color = "green";
-
-            document.getElementById('nome').value = '';
-            document.getElementById('cpf').value = '';
-            document.getElementById('condominio').value = '';
-            document.getElementById('contato').value = '';
-            document.getElementById('endereco').value = '';
-            document.getElementById('dataVisita').value = '';
-            document.getElementById('razao').value = 'Entrega';
-            document.getElementById('morador').value = '';
-            document.getElementById('visitadoNome').value = '';
-            document.getElementById('telefoneVisitado').value = '';
-            document.getElementById('documento').value = '';
-
-            listarVisitantes();
-        }
-
-        async function deletarVisitante(id) {
-            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-            listarVisitantes();
-        }
-
-        async function editarVisitante(id) {
-            const nome = prompt('Novo nome:');
-            const cpf = prompt('Novo CPF:');
-            const condominio = prompt('Nova empresa/condomínio:');
-            const contato = prompt('Novo celular:');
-            const endereco = prompt('Novo endereço:');
-            const dataVisita = prompt('Nova data (yyyy-mm-dd):');
-            const razao = prompt('Nova razão da visita:');
-            const morador = prompt('Novo morador visitado:');
-            const visitadoNome = prompt('Novo nome do visitado:');
-            const telefoneVisitado = prompt('Novo telefone visitado:');
-            const documento = prompt('Novo documento:');
-
-            const dados = { nome, cpf, condominio, contato, endereco, dataVisita, razao, morador, visitadoNome, telefoneVisitado, documento };
-            await fetch(`${apiUrl}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            });
-            listarVisitantes();
-        }
-
-        listarVisitantes();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
-

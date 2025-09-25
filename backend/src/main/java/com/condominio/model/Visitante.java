@@ -11,25 +11,28 @@ public class Visitante {
     private Long id;
 
     private String nome;
+
+    @Column(nullable = false, unique = true)   // CPF obrigatório e único
     private String cpf;
+
     private String contato;          // celular
-    private String empresa;          // nova: empresa ou "particular"
-    private String endereco;         // nova
-    private LocalDate dataVisita;    // nova
-    private String razaoVisita;      // nova
+    private String empresa;          // empresa ou "particular"
+    private String endereco;         // endereço do visitante
+    private LocalDate dataVisita;    // data da visita
+    private String razaoVisita;      // razão da visita
 
     // Dados do visitado
-    private String numeroCasa;       // nova
-    private String nomeVisitado;     // nova
-    private String telefoneVisitado; // nova
+    private String numeroCasa;
+    private String nomeVisitado;
+    private String telefoneVisitado;
 
-    // Novos campos
-    @Column(unique = true)           // Garantir unicidade no banco de dados
-    private String documento;
+    // Outros campos opcionais
+    private String documento;        // RG ou outro doc, não único
     private String morador;
     private String condominio;
 
-    // Getters e setters
+    // ================= Getters e Setters =================
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

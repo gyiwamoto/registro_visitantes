@@ -1,4 +1,5 @@
 com\condominio\RegistroVisitantesApplication.class
 com\condominio\controller\VisitanteController.class
+com\condominio\config\CorsConfig.class
 com\condominio\model\Visitante.class
 com\condominio\repository\VisitanteRepository.class

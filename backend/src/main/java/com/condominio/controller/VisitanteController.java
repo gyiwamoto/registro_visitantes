@@ -3,6 +3,7 @@ package com.condominio.controller;
 import com.condominio.model.Visitante;
 import com.condominio.repository.VisitanteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/visitantes")
+@CrossOrigin(origins = "http://localhost:8081") // 🔹 Permite requisições do seu front
 public class VisitanteController {
 
     @Autowired
@@ -40,14 +42,21 @@ public class VisitanteController {
 
     @PostMapping
     public ResponseEntity<String> criarVisitante(@RequestBody Visitante visitante) {
-        Optional<Visitante> visitanteExistente = visitanteRepository.findByDocumento(visitante.getDocumento());
+        // Verificação de duplicidade por CPF
+        if (visitante.getCpf() != null && visitanteRepository.existsByCpf(visitante.getCpf())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Erro: já existe um visitante cadastrado com este CPF.");
+        }
 
-        if (visitanteExistente.isPresent()) {
-            return ResponseEntity.badRequest().body("Visitante já cadastrado!");
+        // Verificação de duplicidade por Documento
+        if (visitante.getDocumento() != null && visitanteRepository.findByDocumento(visitante.getDocumento()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Erro: já existe um visitante cadastrado com este Documento.");
         }
 
         visitanteRepository.save(visitante);
-        return ResponseEntity.ok("Visitante cadastrado com sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Visitante cadastrado com sucesso!");
     }
 
     @PutMapping("/{id}")
@@ -59,8 +68,19 @@ public class VisitanteController {
             if (visitanteExistente.isPresent()) {
                 Visitante v = visitanteExistente.get();
                 v.setNome(dados.getNome());
-                v.setDocumento(dados.getDocumento());
+                v.setCpf(dados.getCpf());
+                v.setContato(dados.getContato());
+                v.setEmpresa(dados.getEmpresa());
+                v.setEndereco(dados.getEndereco());
                 v.setDataVisita(dados.getDataVisita());
+                v.setRazaoVisita(dados.getRazaoVisita());
+                v.setNumeroCasa(dados.getNumeroCasa());
+                v.setNomeVisitado(dados.getNomeVisitado());
+                v.setTelefoneVisitado(dados.getTelefoneVisitado());
+                v.setDocumento(dados.getDocumento());
+                v.setMorador(dados.getMorador());
+                v.setCondominio(dados.getCondominio());
+
                 Visitante atualizado = visitanteRepository.save(v);
                 return ResponseEntity.ok(atualizado);
             } else {
