@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Condomínio Residencial D'Ouro - Registro de Visitantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 450px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #salvar-btn { background-color: #28a745; }
+        #cancelar-btn { background-color: #dc3545; }
+        #listar-btn { background-color: #007bff; }
+
+        #mensagem {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container" autocomplete="off">
+    <h1>Condomínio Residencial D'Ouro</h1>
+    <h2>Adicionar Visitante</h2>
+
+    <form id="visitanteForm" autocomplete="off">
+        <label>Nome completo:</label>
+        <input type="text" id="nome" required autocomplete="off">
+
+        <label>CPF:</label>
+        <input type="text" id="cpf" required autocomplete="off">
+
+        <label>Empresa (ou "Particular"):</label>
+        <input type="text" id="empresa" placeholder="Particular" autocomplete="off">
+
+        <label>Celular:</label>
+        <input type="text" id="contato" autocomplete="off">
+
+        <label>Endereço:</label>
+        <input type="text" id="endereco" autocomplete="off">
+
+        <label>Data da Visita:</label>
+        <input type="date" id="dataVisita" autocomplete="off">
+
+        <label>Razão da Visita:</label>
+        <select id="razao">
+            <option value="">Selecione</option>
+            <option value="Entrega">Entrega</option>
+            <option value="Visita Social">Visita Social</option>
+            <option value="Prestação de Serviços">Prestação de Serviços</option>
+        </select>
+
+        <label>Casa/Apartamento Visitado:</label>
+        <input type="text" id="morador" autocomplete="off">
+
+        <label>Nome do Visitado:</label>
+        <input type="text" id="visitadoNome" autocomplete="off">
+
+        <label>Telefone do Visitado:</label>
+        <input type="text" id="telefoneVisitado" autocomplete="off">
+
+        <label>Autorizador:</label>
+        <input type="text" id="autorizador" autocomplete="off">
+
+        <div class="button-container">
+            <button type="submit" id="salvar-btn">Salvar</button>
+            <button type="button" id="cancelar-btn" onclick="limparFormulario()">Cancelar</button>
+            <button type="button" id="listar-btn" onclick="listarVisitantes()">Listar Visitantes</button>
+        </div>
+
+        <p id="mensagem"></p>
+    </form>
+</div>
+
+<script src="script.js"></script>
+<script>
+    function limparFormulario() {
+        const form = document.getElementById('visitanteForm');
+        form.reset(); // limpa todos os campos
+        const mensagemEl = document.getElementById('mensagem');
+        if (mensagemEl) mensagemEl.innerText = '';
+    }
+</script>
+
+</body>
+</html>
+

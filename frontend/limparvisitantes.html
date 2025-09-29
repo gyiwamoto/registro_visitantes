@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Limpar Visitantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f2f5;
+        }
+
+        button {
+            padding: 15px 25px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #a71d2a;
+        }
+
+        p {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Limpar Formulário de Visitantes</h1>
+    <button onclick="limparTudo()">Limpar Agora</button>
+    <p id="mensagem"></p>
+
+    <script>
+        function limparTudo() {
+            // Limpa localStorage/sessionStorage, se houver
+            if (window.localStorage) localStorage.clear();
+            if (window.sessionStorage) sessionStorage.clear();
+
+            // Limpa formulário da página principal se estiver aberta
+            const form = window.opener?.document?.getElementById('visitanteForm');
+            if (form) form.reset();
+
+            const msg = document.getElementById('mensagem');
+            if (msg) msg.innerText = '✅ Tudo limpo!';
+        }
+    </script>
+</body>
+</html>

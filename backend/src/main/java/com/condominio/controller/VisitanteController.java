@@ -48,10 +48,10 @@ public class VisitanteController {
                     .body("Erro: já existe um visitante cadastrado com este CPF.");
         }
 
-        // Verificação de duplicidade por Documento
-        if (visitante.getDocumento() != null && visitanteRepository.findByDocumento(visitante.getDocumento()).isPresent()) {
+        // Verificação de duplicidade por Autorizador
+        if (visitante.getAutorizador() != null && visitanteRepository.findByAutorizador(visitante.getAutorizador()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Erro: já existe um visitante cadastrado com este Documento.");
+                    .body("Erro: já existe um visitante cadastrado com este Autorizador.");
         }
 
         visitanteRepository.save(visitante);
@@ -77,7 +77,7 @@ public class VisitanteController {
                 v.setNumeroCasa(dados.getNumeroCasa());
                 v.setNomeVisitado(dados.getNomeVisitado());
                 v.setTelefoneVisitado(dados.getTelefoneVisitado());
-                v.setDocumento(dados.getDocumento());
+                v.setAutorizador(dados.getAutorizador());
                 v.setMorador(dados.getMorador());
                 v.setCondominio(dados.getCondominio());
 
@@ -106,4 +106,3 @@ public class VisitanteController {
         }
     }
 }
-

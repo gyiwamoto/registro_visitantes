@@ -1,10 +1,15 @@
+<<<<<<< Updated upstream
 const mysql = require('mysql2/promise');
+=======
+>>>>>>> Stashed changes
+const { Pool } = require('pg');
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
-    database: process.env.DB_NAME || 'condominio'
+const pool = new Pool({
+  host: 'registro_visitantes-db',
+  user: 'gerson',
+  password: 'senha123',
+  database: 'visitantesdb',
+  port: 5432,
 });
 
 module.exports = pool;

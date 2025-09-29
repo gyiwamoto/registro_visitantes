@@ -1,4 +1,91 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 500px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+}
+
+#salvar-btn { background-color: #28a745; }
+#cancelar-btn { background-color: #dc3545; }
+#listar-btn { background-color: #007bff; }
+
+#mensagem {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.filter-container {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.filter-container input {
+    flex: 1;
+}
+
+.filter-container button {
+    flex: 0 0 120px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
 }

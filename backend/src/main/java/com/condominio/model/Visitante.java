@@ -27,7 +27,7 @@ public class Visitante {
     private String telefoneVisitado;
 
     // Outros campos opcionais
-    private String documento;        // RG ou outro doc, não único
+    private String autorizador;        // RG ou outro doc, não único
     private String morador;
     private String condominio;
 
@@ -66,12 +66,17 @@ public class Visitante {
     public String getTelefoneVisitado() { return telefoneVisitado; }
     public void setTelefoneVisitado(String telefoneVisitado) { this.telefoneVisitado = telefoneVisitado; }
 
-    public String getDocumento() { return documento; }
-    public void setDocumento(String documento) { this.documento = documento; }
+    public String getAutorizador() { return autorizador; }
+    public void setAutorizador(String autorizador) { this.autorizador = autorizador; }
 
     public String getMorador() { return morador; }
     public void setMorador(String morador) { this.morador = morador; }
 
     public String getCondominio() { return condominio; }
     public void setCondominio(String condominio) { this.condominio = condominio; }
+
+    // ================= Método para compatibilidade =================
+    public String getDocumento() {
+        return this.autorizador;
+    }
 }
