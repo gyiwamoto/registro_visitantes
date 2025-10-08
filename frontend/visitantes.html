@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Condomínio Residencial D'Ouro - Registro de Visitantes</title>
+    <title>Condomínio Residencial D'Oro - Registro de Visitantes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,29 +64,56 @@
             font-weight: bold;
             color: #333;
         }
+
+        /* Estilo para a tabela de visitantes */
+        .table-container {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+        }
+
+        table td small {
+            display: block;
+            color: #555;
+            font-style: italic;
+            margin-top: 2px;
+        }
     </style>
 </head>
 <body>
 
 <div class="form-container" autocomplete="off">
-    <h1>Condomínio Residencial D'Ouro</h1>
+    <h1>Condomínio Residencial D'Oro</h1>
     <h2>Adicionar Visitante</h2>
 
     <form id="visitanteForm" autocomplete="off">
         <label>Nome completo:</label>
-        <input type="text" id="nome" required autocomplete="off">
+        <input type="text" id="nome" placeholder="Digite o nome" required autocomplete="off">
 
         <label>CPF:</label>
-        <input type="text" id="cpf" required autocomplete="off">
+        <input type="text" id="cpf" placeholder="Digite o CPF" required autocomplete="off">
 
-        <label>Empresa (ou "Particular"):</label>
-        <input type="text" id="empresa" placeholder="Particular" autocomplete="off">
+        <label>Condomínio / Empresa:</label>
+        <input type="text" id="condominio" placeholder="Particular ou Empresa" autocomplete="off">
 
         <label>Celular:</label>
-        <input type="text" id="contato" autocomplete="off">
+        <input type="text" id="contato" placeholder="Digite o número de celular" autocomplete="off">
 
         <label>Endereço:</label>
-        <input type="text" id="endereco" autocomplete="off">
+        <input type="text" id="endereco" placeholder="Digite o endereço" autocomplete="off">
 
         <label>Data da Visita:</label>
         <input type="date" id="dataVisita" autocomplete="off">
@@ -100,16 +127,16 @@
         </select>
 
         <label>Casa/Apartamento Visitado:</label>
-        <input type="text" id="morador" autocomplete="off">
+        <input type="text" id="morador" placeholder="Digite a casa ou apartamento" autocomplete="off">
 
         <label>Nome do Visitado:</label>
-        <input type="text" id="visitadoNome" autocomplete="off">
+        <input type="text" id="visitadoNome" placeholder="Digite o nome do visitado" autocomplete="off">
 
         <label>Telefone do Visitado:</label>
-        <input type="text" id="telefoneVisitado" autocomplete="off">
+        <input type="text" id="telefoneVisitado" placeholder="Digite o telefone do visitado" autocomplete="off">
 
         <label>Autorizador:</label>
-        <input type="text" id="autorizador" autocomplete="off">
+        <input type="text" id="autorizador" placeholder="Digite o documento autorizador" autocomplete="off">
 
         <div class="button-container">
             <button type="submit" id="salvar-btn">Salvar</button>
@@ -119,6 +146,31 @@
 
         <p id="mensagem"></p>
     </form>
+</div>
+
+<div class="table-container">
+    <table id="tabelaVisitantes">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Condomínio / Empresa</th>
+                <th>Contato</th>
+                <th>Endereço</th>
+                <th>Data Visita</th>
+                <th>Razão</th>
+                <th>Morador</th>
+                <th>Visitado</th>
+                <th>Telefone Visitado</th>
+                <th>Autorizador</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Linhas de visitantes serão inseridas via JS -->
+        </tbody>
+    </table>
 </div>
 
 <script src="script.js"></script>
@@ -133,4 +185,3 @@
 
 </body>
 </html>
-

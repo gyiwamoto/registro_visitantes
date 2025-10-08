@@ -1,7 +1,9 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:15
-    container_name: registro_visitantes-db
+    container_name: registro_visitantes-db-v2
     restart: always
     environment:
       POSTGRES_DB: visitantesdb
@@ -17,7 +19,7 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: registro_visitantes-backend
+    container_name: registro_visitantes-backend-v2
     ports:
       - "8080:8080"
     environment:
@@ -26,6 +28,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: senha123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
+      APP_VERSION: "2.0"
+      ADMIN_SECRET: "grupo21"   # senha administrativa para criar usuários
     depends_on:
       - db
     networks:
@@ -34,7 +38,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    container_name: registro_visitantes-frontend
+    container_name: registro_visitantes-frontend-v2
     ports:
       - "8081:80"
     depends_on:

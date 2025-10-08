@@ -5,9 +5,7 @@ const apiUrl = 'http://localhost:8080/visitantes';
 document.getElementById('visitanteForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
-    if (!form.checkValidity()) {
-        e.stopPropagation();
-    }
+    if (!form.checkValidity()) e.stopPropagation();
     form.classList.add('was-validated');
 
     if (form.checkValidity()) {
@@ -16,7 +14,6 @@ document.getElementById('visitanteForm')?.addEventListener('submit', async (e) =
 });
 
 document.getElementById('listar-btn')?.addEventListener('click', listarVisitantes);
-document.getElementById('btnListarVisitantes')?.addEventListener('click', listarVisitantes);
 document.getElementById('cancelar-btn')?.addEventListener('click', cancelarFormulario);
 
 // ---------- Funções utilitárias ----------
@@ -60,11 +57,6 @@ async function listarVisitantes() {
         if (!response.ok) throw new Error('Falha na comunicação com o servidor.');
         let visitantes = await response.json();
 
-        const filtroCasa = document.getElementById('filtroCasa')?.value.trim();
-        const filtroData = document.getElementById('filtroData')?.value;
-        if (filtroCasa) visitantes = visitantes.filter(v => v.morador && v.morador.includes(filtroCasa));
-        if (filtroData) visitantes = visitantes.filter(v => v.dataVisita && v.dataVisita === filtroData);
-
         const tbody = document.querySelector('#tabelaVisitantes tbody');
         if (tbody) tbody.innerHTML = '';
 
@@ -74,7 +66,10 @@ async function listarVisitantes() {
                 <td>${v.id}</td>
                 <td>${v.nome}</td>
                 <td>${v.cpf}</td>
-                <td>${v.condominio || 'Particular'}</td>
+                <td>
+                    ${v.condominio || 'Particular'}
+                    ${v.empresa ? `<small>Empresa: ${v.empresa}</small>` : ''}
+                </td>
                 <td>${v.contato}</td>
                 <td>${v.endereco || ''}</td>
                 <td>${v.dataVisita || ''}</td>
