@@ -1,5 +1,11 @@
-com\condominio\RegistroVisitantesApplication.class
-com\condominio\controller\VisitanteController.class
-com\condominio\config\CorsConfig.class
+com\condominio\model\Usuario.class
+com\condominio\repository\CondominioRepository.class
+com\condominio\repository\MoradorRepository.class
 com\condominio\model\Visitante.class
 com\condominio\repository\VisitanteRepository.class
+com\condominio\controller\MoradorController.class
+com\condominio\RegistroVisitantesApplication.class
+com\condominio\controller\VisitanteController.class
+com\condominio\model\Morador.class
+com\condominio\config\CorsConfig.class
+com\condominio\model\Condominio.class

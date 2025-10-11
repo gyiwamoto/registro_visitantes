@@ -1,0 +1,35 @@
+Perfeito, agora está claro e confirmado: você realmente tem dois projetos distintos dentro de C:\Projetos\registro_visitantes:
+
+🔹 Estrutura resumida
+
+Backend (Spring Boot / Maven)
+
+Pasta: backend
+
+Contém: pom.xml, src/main/java/com/condominio/..., application.properties
+
+Função: serve API REST, conecta ao PostgreSQL, gera dados JSON.
+
+Frontend (HTML/JS puro)
+
+Pasta: frontend
+
+Contém: index.html, visitantes.html, script.js, style.css
+
+Função: renderiza páginas e consome a API do backend via JavaScript (fetch ou AJAX).
+
+Outros arquivos / projetos menores
+
+public → arquivos HTML/JS adicionais (talvez testes ou backups)
+
+sql_init → scripts SQL para inicializar banco
+
+docker-compose.yml e app.js na raiz → provavelmente configuram containers Docker e inicializam a aplicação (podendo envolver backend e frontend).
+
+🔹 Consequência disso
+
+Quando você acessa http://localhost:8080/visitantes diretamente, está acessando o backend, que retorna JSON puro, por isso a página aparece em branco com [].
+
+O frontend (frontend/visitantes.html ou index.html) é quem renderiza visualmente os visitantes usando JavaScript.
+
+Ou seja, a versão que “estava funcionando” estava usando o frontend corretamente. Agora, se você só abre a rota do backend, não verá nada bonito.

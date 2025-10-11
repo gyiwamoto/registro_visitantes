@@ -1,3 +1,6 @@
+/* ===================================================== */
+/* Estilo geral da página */
+/* ===================================================== */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
@@ -7,11 +10,15 @@ body {
     justify-content: center;
 }
 
+/* Títulos */
 h1, h2 {
     text-align: center;
     color: #333;
 }
 
+/* ===================================================== */
+/* Formulário de visitantes */
+/* ===================================================== */
 .form-container {
     background-color: #fff;
     padding: 25px 30px;
@@ -35,6 +42,7 @@ input, select {
     box-sizing: border-box;
 }
 
+/* Botões */
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -48,18 +56,28 @@ button {
     cursor: pointer;
     font-weight: bold;
     color: #fff;
+    transition: background-color 0.2s ease;
 }
 
 #salvar-btn { background-color: #28a745; }
-#cancelar-btn { background-color: #dc3545; }
-#listar-btn { background-color: #007bff; }
+#salvar-btn:hover { background-color: #218838; }
 
+#cancelar-btn { background-color: #dc3545; }
+#cancelar-btn:hover { background-color: #c82333; }
+
+#listar-btn { background-color: #007bff; }
+#listar-btn:hover { background-color: #0069d9; }
+
+/* Mensagens */
 #mensagem {
     margin-top: 15px;
     text-align: center;
     font-weight: bold;
 }
 
+/* ===================================================== */
+/* Filtros de listagem */
+/* ===================================================== */
 .filter-container {
     margin-top: 15px;
     display: flex;
@@ -74,6 +92,9 @@ button {
     flex: 0 0 120px;
 }
 
+/* ===================================================== */
+/* Tabela de visitantes */
+/* ===================================================== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -88,4 +109,8 @@ th, td {
 
 th {
     background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e9ecef;
 }

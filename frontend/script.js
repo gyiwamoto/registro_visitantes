@@ -1,208 +1,202 @@
-// URL da API (para Docker Compose, usar o nome do serviço do backend)
-const apiUrl = 'http://localhost:8080/visitantes';
+// =======================
+// script.js atualizado e funcional
+// =======================
 
-// ---------- Eventos dos botões ----------
-document.getElementById('visitanteForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    if (!form.checkValidity()) e.stopPropagation();
-    form.classList.add('was-validated');
+import { 
+    salvarVisitante as salvarAPI, 
+    listarVisitantes as listarAPI, 
+    editarVisitante as editarAPI, 
+    deletarVisitante as deletarAPI 
+} from "./apiVisitantes.js";
 
-    if (form.checkValidity()) {
-        await adicionarVisitante();
-    }
-});
+const moradores = window.moradores;
 
-document.getElementById('listar-btn')?.addEventListener('click', listarVisitantes);
-document.getElementById('cancelar-btn')?.addEventListener('click', cancelarFormulario);
-
-// ---------- Funções utilitárias ----------
-function cancelarFormulario() {
-    limparFormulario();
-}
-
-function limparFormulario() {
-    const campos = ['nome','cpf','condominio','contato','endereco','dataVisita','razao','morador','visitadoNome','telefoneVisitado','autorizador'];
-    campos.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-
-    const mensagemEl = document.getElementById('mensagem');
-    if (mensagemEl) {
-        mensagemEl.innerText = '';
-        mensagemEl.classList.add('d-none');
-        mensagemEl.classList.remove('alert-success','alert-danger','alert-warning','alert-info');
-    }
-
-    const form = document.getElementById('visitanteForm');
-    if (form) form.classList.remove('was-validated');
-}
-
+// =======================
+// Exibir mensagens
+// =======================
 function exibirMensagem(texto, tipo) {
-    const mensagemEl = document.getElementById('mensagem');
+    const mensagemEl = document.getElementById("mensagem");
     if (!mensagemEl) return;
     mensagemEl.innerText = texto;
-    mensagemEl.classList.remove('d-none','alert-success','alert-danger','alert-warning','alert-info');
-    if (tipo === 'success') mensagemEl.classList.add('alert-success');
-    else if (tipo === 'error') mensagemEl.classList.add('alert-danger');
-    else if (tipo === 'warning') mensagemEl.classList.add('alert-warning');
-    else mensagemEl.classList.add('alert-info');
-}
+    mensagemEl.classList.remove("alert-success", "alert-danger", "alert-warning", "alert-info");
 
-// ---------- Listagem ----------
-async function listarVisitantes() {
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Falha na comunicação com o servidor.');
-        let visitantes = await response.json();
-
-        const tbody = document.querySelector('#tabelaVisitantes tbody');
-        if (tbody) tbody.innerHTML = '';
-
-        visitantes.forEach(v => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${v.id}</td>
-                <td>${v.nome}</td>
-                <td>${v.cpf}</td>
-                <td>
-                    ${v.condominio || 'Particular'}
-                    ${v.empresa ? `<small>Empresa: ${v.empresa}</small>` : ''}
-                </td>
-                <td>${v.contato}</td>
-                <td>${v.endereco || ''}</td>
-                <td>${v.dataVisita || ''}</td>
-                <td>${v.razao || ''}</td>
-                <td>${v.morador || ''}</td>
-                <td>${v.visitadoNome || ''}</td>
-                <td>${v.telefoneVisitado || ''}</td>
-                <td>${v.autorizador || ''}</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2" onclick="editarVisitante(${v.id})">Editar</button>
-                    <button class="btn btn-sm btn-danger" onclick="deletarVisitante(${v.id})">Deletar</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        exibirMensagem(`✅ Listados ${visitantes.length} visitantes`, 'success');
-
-    } catch (error) {
-        console.error('Erro ao listar visitantes:', error);
-        exibirMensagem('❌ Erro ao listar visitantes!', 'error');
+    switch (tipo) {
+        case "success": mensagemEl.classList.add("alert-success"); break;
+        case "error": mensagemEl.classList.add("alert-danger"); break;
+        case "warning": mensagemEl.classList.add("alert-warning"); break;
+        default: mensagemEl.classList.add("alert-info");
     }
 }
 
-// ---------- Cadastro ----------
-async function adicionarVisitante() {
-    const visitante = {
-        nome: document.getElementById('nome')?.value.trim(),
-        cpf: document.getElementById('cpf')?.value.trim(),
-        condominio: document.getElementById('condominio')?.value.trim() || 'Particular',
-        contato: document.getElementById('contato')?.value.trim(),
-        endereco: document.getElementById('endereco')?.value.trim(),
-        dataVisita: document.getElementById('dataVisita')?.value.trim(),
-        razao: document.getElementById('razao')?.value.trim(),
-        morador: document.getElementById('morador')?.value.trim(),
-        visitadoNome: document.getElementById('visitadoNome')?.value.trim(),
-        telefoneVisitado: document.getElementById('telefoneVisitado')?.value.trim(),
-        autorizador: document.getElementById('autorizador')?.value.trim()
-    };
+// =======================
+// Limpar formulário
+// =======================
+function limparFormulario() {
+    const campos = [
+        "nome","cpf","condominio","contato","endereco",
+        "dataVisita","razao","morador","visitadoNome",
+        "telefoneVisitado","autorizadorInput","autorizadorSelect"
+    ];
+    campos.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.value = "";
+            if(id === "autorizadorInput") el.classList.add("d-none");
+        }
+    });
 
-    const camposObrigatorios = ['nome','cpf','contato','endereco','dataVisita','razao','morador','visitadoNome','telefoneVisitado','autorizador'];
-    const camposVazios = camposObrigatorios.filter(c => !visitante[c]);
+    const form = document.getElementById("visitanteForm");
+    if (form) form.classList.remove("was-validated");
 
-    if (camposVazios.length > 0) {
-        exibirMensagem('⚠️ Preencha todos os campos obrigatórios antes de salvar.', 'warning');
+    const mensagemEl = document.getElementById("mensagem");
+    if (mensagemEl) {
+        mensagemEl.innerText = "";
+        mensagemEl.classList.remove("alert-success","alert-danger","alert-warning","alert-info");
+    }
+}
+
+// =======================
+// Bloco: Atualizar select de moradores por casa
+// =======================
+
+document.getElementById("morador")?.addEventListener("change", function() {
+    const casaSelecionada = this.value; // pega o valor selecionado
+    const casa = window.moradores.find(c => c[0] === casaSelecionada);
+
+    console.log("Casa selecionada:", casa);
+
+    const selectMoradores = document.getElementById("visitadoNome");
+    if (!selectMoradores) return;
+
+    // limpa opções anteriores e adiciona opção padrão
+    selectMoradores.innerHTML = '<option value="">Selecione o morador</option>';
+
+    if (casa && casa.length > 1) {
+        // adiciona cada morador como option
+        casa.slice(1).forEach(morador => {
+            const option = document.createElement("option");
+            option.value = morador.nome;
+            option.textContent = morador.nome;
+            selectMoradores.appendChild(option);
+        });
+    }
+
+    // limpa telefone do visitado
+    const telefoneInput = document.getElementById("telefoneVisitado");
+    if (telefoneInput) telefoneInput.value = '';
+});
+
+// =======================
+// Atualizar telefone ao selecionar morador
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
+    const selectVisitado = document.getElementById("visitadoNome");
+    const selectMorador = document.getElementById("morador");
+    const telefoneInput = document.getElementById("telefoneVisitado");
+
+    if (!selectVisitado || !selectMorador || !telefoneInput) return;
+
+    selectVisitado.addEventListener("change", function() {
+        const casaSelecionada = selectMorador.value;
+        const moradorSelecionado = this.value;
+
+        telefoneInput.value = "";
+
+        if (!casaSelecionada || !moradorSelecionado || !window.moradores) return;
+
+        const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
+        if (!casa) return;
+
+        // suporta moradores como objetos {nome, telefone} ou strings simples
+        const morador = casa.slice(1).find(m => {
+            if (typeof m === "string") return m === moradorSelecionado;
+            if (typeof m === "object") return m.nome === moradorSelecionado;
+            return false;
+        });
+
+        if (morador) {
+            telefoneInput.value = typeof morador === "string" ? "" : (morador.telefone || "");
+        }
+    });
+});
+
+// =======================
+// Eventos de selects
+// =======================
+
+// Preencher select de moradores assim que a casa for selecionada
+const selectCasa = document.getElementById("morador");
+const selectVisitado = document.getElementById("visitadoNome");
+
+selectCasa?.addEventListener("change", () => {
+    const casaSelecionada = selectCasa.value;
+    if (!casaSelecionada || !window.moradores) {
+        selectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
         return;
     }
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(visitante)
-        });
+    // Limpa e adiciona opção padrão
+    selectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
 
-        if (response.status === 409) exibirMensagem('⚠️ Visitante já cadastrado', 'warning');
-        else if (response.status === 201 || response.ok) {
-            exibirMensagem('✅ Visitante cadastrado com sucesso!', 'success');
-            limparFormulario();
-            listarVisitantes();
-        } else exibirMensagem('❌ Erro ao cadastrar visitante.', 'error');
+    // Busca os moradores da casa selecionada
+    const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
+    if (!casa) return;
 
-    } catch (error) {
-        console.error('Erro de comunicação com o servidor:', error);
-        exibirMensagem('❌ Erro de comunicação com o servidor!', 'error');
+    // Popula o select de visitado
+    casa.slice(1).forEach(m => {
+        if (m && m.nome) {
+            const opt = document.createElement("option");
+            opt.value = m.nome;
+            opt.textContent = m.nome;
+            selectVisitado.appendChild(opt);
+        }
+    });
+});
+
+// Atualiza campo do autorizador ao escolher do select
+document.getElementById("autorizadorSelect")?.addEventListener("change", function() {
+    const input = document.getElementById("autorizadorInput");
+    if(this.value === "Outro") {
+        input.classList.remove("d-none");
+        input.value = "";
+        input.focus();
+    } else {
+        input.classList.add("d-none");
+        input.value = this.value;
     }
-}
+});
 
-// ---------- Deletar ----------
-async function deletarVisitante(id) {
+// =======================
+// Envio do formulário
+// =======================
+document.getElementById("visitanteForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const visitante = {
+        nome: document.getElementById("nome").value.trim(),
+        cpf: document.getElementById("cpf").value.trim(),
+        condominio: document.getElementById("condominio").value.trim(),
+        contato: document.getElementById("contato").value.trim(),
+        endereco: document.getElementById("endereco").value.trim(),
+        dataVisita: document.getElementById("dataVisita").value,
+        razao: document.getElementById("razao").value.trim(),
+        morador: document.getElementById("morador").value,
+        visitadoNome: document.getElementById("visitadoNome").value,
+        telefoneVisitado: document.getElementById("telefoneVisitado").value,
+        autorizador: document.getElementById("autorizadorInput").classList.contains("d-none") 
+                     ? document.getElementById("autorizadorSelect").value
+                     : document.getElementById("autorizadorInput").value.trim()
+    };
+
     try {
-        const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Falha ao deletar visitante');
-        listarVisitantes();
-        exibirMensagem('✅ Visitante deletado com sucesso!', 'success');
-    } catch (error) {
-        console.error('Erro ao deletar visitante:', error);
-        exibirMensagem('❌ Erro ao deletar visitante!', 'error');
+        await salvarAPI(visitante);
+        exibirMensagem("Visitante salvo com sucesso!", "success");
+        limparFormulario();
+    } catch (err) {
+        console.error("Erro ao salvar visitante:", err);
+        exibirMensagem(`Erro ao salvar visitante: ${err.message}`, "error");
     }
-}
+});
 
-// ---------- Editar ----------
-async function editarVisitante(id) {
-    try {
-        const visitanteExistente = await (await fetch(`${apiUrl}/${id}`)).json();
 
-        const nome = prompt('Novo nome:', visitanteExistente.nome);
-        if (nome === null) return;
 
-        const cpf = prompt('Novo CPF:', visitanteExistente.cpf);
-        if (cpf === null) return;
-
-        const condominio = prompt('Novo condomínio/empresa:', visitanteExistente.condominio);
-        if (condominio === null) return;
-
-        const contato = prompt('Novo celular:', visitanteExistente.contato);
-        if (contato === null) return;
-
-        const endereco = prompt('Novo endereço:', visitanteExistente.endereco);
-        if (endereco === null) return;
-
-        const dataVisita = prompt('Nova data (yyyy-mm-dd):', visitanteExistente.dataVisita);
-        if (dataVisita === null) return;
-
-        const razao = prompt('Nova razão da visita:', visitanteExistente.razao);
-        if (razao === null) return;
-
-        const morador = prompt('Novo morador visitado:', visitanteExistente.morador);
-        if (morador === null) return;
-
-        const visitadoNome = prompt('Novo nome do visitado:', visitanteExistente.visitadoNome);
-        if (visitadoNome === null) return;
-
-        const telefoneVisitado = prompt('Novo telefone visitado:', visitanteExistente.telefoneVisitado);
-        if (telefoneVisitado === null) return;
-
-        const autorizador = prompt('Novo autorizador:', visitanteExistente.autorizador);
-        if (autorizador === null) return;
-
-        const dados = { nome, cpf, condominio, contato, endereco, dataVisita, razao, morador, visitadoNome, telefoneVisitado, autorizador };
-
-        const response = await fetch(`${apiUrl}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dados)
-        });
-
-        if (!response.ok) throw new Error('Falha ao editar visitante');
-        listarVisitantes();
-        exibirMensagem('✅ Visitante atualizado com sucesso!', 'success');
-
-    } catch (error) {
-        console.error('Erro ao editar visitante:', error);
-        exibirMensagem('❌ Erro ao editar visitante!', 'error');
-    }
-}

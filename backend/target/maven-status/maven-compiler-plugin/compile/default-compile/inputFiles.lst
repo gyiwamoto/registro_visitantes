@@ -1,5 +1,11 @@
-C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\controller\VisitanteController.java
-C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\CorsConfig.java
-C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\Visitante.java
-C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\RegistroVisitantesApplication.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\repository\CondominioRepository.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\Condominio.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\Morador.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\repository\MoradorRepository.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\config\CorsConfig.java
 C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\repository\VisitanteRepository.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\controller\VisitanteController.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\RegistroVisitantesApplication.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\Usuario.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\model\Visitante.java
+C:\Projetos\registro_visitantes\backend\src\main\java\com\condominio\controller\MoradorController.java

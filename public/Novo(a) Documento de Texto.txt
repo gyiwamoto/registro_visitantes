@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Registro de Visitantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        h2 { text-align: center; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #0056b3; }
+        .toggle {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+            cursor: pointer;
+        }
+        .error { color: red; font-size: 0.9em; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="form-title">Login</h2>
+        <div class="error" id="error-msg"></div>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Senha" required>
+        <input type="password" id="adminPassword" placeholder="Senha Administrativa (apenas registro)" style="display:none;">
+        <button id="submit-btn">Entrar</button>
+        <div class="toggle" id="toggle-form">Criar novo usuário</div>
+    </div>
+
+    <script>
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const adminInput = document.getElementById("adminPassword");
+        const submitBtn = document.getElementById("submit-btn");
+        const toggleForm = document.getElementById("toggle-form");
+        const errorMsg = document.getElementById("error-msg");
+        const formTitle = document.getElementById("form-title");
+
+        let isRegister = false;
+
+        toggleForm.addEventListener("click", () => {
+            isRegister = !isRegister;
+            adminInput.style.display = isRegister ? "block" : "none";
+            submitBtn.textContent = isRegister ? "Registrar" : "Entrar";
+            formTitle.textContent = isRegister ? "Registrar Usuário" : "Login";
+            toggleForm.textContent = isRegister ? "Voltar ao login" : "Criar novo usuário";
+            errorMsg.textContent = "";
+        });
+
+        submitBtn.addEventListener("click", async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const adminPassword = adminInput.value;
+
+            const endpoint = isRegister ? "/register" : "/login";
+            const payload = isRegister ? { email, password, adminPassword } : { email, password };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    errorMsg.textContent = data.error || "Erro desconhecido";
+                    return;
+                }
+                errorMsg.textContent = "";
+                alert(isRegister ? "Usuário registrado com sucesso!" : "Login realizado com sucesso!");
+                // Redirecionar para formulário de visitantes
+                window.location.href = "/visitantes";
+            } catch (err) {
+                console.error(err);
+                errorMsg.textContent = "Erro de conexão com o servidor";
+            }
+        });
+    </script>
+</body>
+</html>

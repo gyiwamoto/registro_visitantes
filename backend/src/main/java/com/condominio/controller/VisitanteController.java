@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/visitantes")
-@CrossOrigin(origins = "http://localhost:8081") // 🔹 Permite requisições do seu front
+@RequestMapping("/api/visitantes") // 🔹 Alterado para incluir /api
+@CrossOrigin(origins = "*") // 🔹 Permite requisições de qualquer origem (apenas para teste)
 public class VisitanteController {
 
     @Autowired
@@ -40,18 +40,41 @@ public class VisitanteController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/salvar")
     public ResponseEntity<String> criarVisitante(@RequestBody Visitante visitante) {
-        // Verificação de duplicidade por CPF
+        // Validação mínima
+        if (visitante.getNome() == null || visitante.getNome().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro: Nome do visitante é obrigatório.");
+        }
+
+        // Checa CPF duplicado
         if (visitante.getCpf() != null && visitanteRepository.existsByCpf(visitante.getCpf())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Erro: já existe um visitante cadastrado com este CPF.");
         }
 
-        // Verificação de duplicidade por Autorizador
+        // Checa Autorizador duplicado
         if (visitante.getAutorizador() != null && visitanteRepository.findByAutorizador(visitante.getAutorizador()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Erro: já existe um visitante cadastrado com este Autorizador.");
+        }
+
+        // Permitir morador nulo ou apenas garantir que o ID seja convertido corretamente
+        if (visitante.getMorador() != null && visitante.getMorador().getId() != null) {
+            // Se o frontend enviar "C1" ou qualquer string, tenta converter para Long
+            try {
+                String strId = visitante.getMorador().getId().toString().replaceAll("\\D", "");
+                visitante.getMorador().setId(Long.parseLong(strId));
+            } catch (NumberFormatException e) {
+                visitante.setMorador(null); // fallback seguro
+            }
+        }
+
+        // Permitir condominio nulo, default para 1
+        if (visitante.getCondominio() == null) {
+            visitante.setCondominio(new com.condominio.model.Condominio());
+            visitante.getCondominio().setId(1L);
         }
 
         visitanteRepository.save(visitante);
@@ -106,3 +129,6 @@ public class VisitanteController {
         }
     }
 }
+
+
+
