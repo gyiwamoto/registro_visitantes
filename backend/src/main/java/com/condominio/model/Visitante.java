@@ -1,6 +1,7 @@
 package com.condominio.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate; // Importar LocalDate
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,7 +32,7 @@ public class Visitante {
 
     // Campos adicionais usados pelo controller
     @Column(name = "data_visita")
-    private LocalDateTime dataVisita;
+    private LocalDate dataVisita; // Alterado de LocalDateTime para LocalDate
 
     @Column(name = "razao_visita")
     private String razaoVisita;
@@ -73,7 +74,7 @@ public class Visitante {
     public Visitante() { }
 
     public Visitante(String nome, String documento, String veiculo, String motivo,
-                     LocalDateTime dataVisita, String razaoVisita, String numeroCasa,
+                     LocalDate dataVisita, String razaoVisita, String numeroCasa,
                      String nomeVisitado, String telefoneVisitado, String autorizador,
                      String cpf, String contato, String empresa, String endereco,
                      Morador morador, Condominio condominio) {
@@ -102,7 +103,7 @@ public class Visitante {
             this.entrada = LocalDateTime.now();
         }
         if (this.dataVisita == null) {
-            this.dataVisita = LocalDateTime.now();
+            this.dataVisita = LocalDate.now(); // Usar LocalDate.now() aqui
         }
     }
 
@@ -128,8 +129,8 @@ public class Visitante {
     public LocalDateTime getSaida() { return saida; }
     public void setSaida(LocalDateTime saida) { this.saida = saida; }
 
-    public LocalDateTime getDataVisita() { return dataVisita; }
-    public void setDataVisita(LocalDateTime dataVisita) { this.dataVisita = dataVisita; }
+    public LocalDate getDataVisita() { return dataVisita; }
+    public void setDataVisita(LocalDate dataVisita) { this.dataVisita = dataVisita; }
 
     public String getRazaoVisita() { return razaoVisita; }
     public void setRazaoVisita(String razaoVisita) { this.razaoVisita = razaoVisita; }

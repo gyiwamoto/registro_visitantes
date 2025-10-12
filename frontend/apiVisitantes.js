@@ -24,12 +24,13 @@ export async function salvarVisitante(formData) {
         const visitante = {
             nome: formData.nome || "",
             cpf: formData.cpf || "",
+            documento: formData.documento || "", // Adicionado: Campo documento
             contato: formData.contato || "",
-            empresa: formData.condominio || "Particular",
+            empresa: formData.empresa || "Particular",
             endereco: formData.endereco || "",
             dataVisita: formData.dataVisita || "",
-            razaoVisita: formData.razao || "",
-            nomeVisitado: formData.visitadoNome || "",
+            razaoVisita: formData.razaoVisita || "",
+            nomeVisitado: formData.nomeVisitado || "",
             telefoneVisitado: formData.telefoneVisitado || "",
             autorizador: formData.autorizador || "",
             morador: idCasa !== null ? { id: idCasa } : null,
@@ -47,7 +48,9 @@ export async function salvarVisitante(formData) {
             throw new Error(`Erro ao salvar visitante: ${response.status} ${response.statusText} - ${text}`);
         }
 
-        return await response.json();
+        // Se a resposta for OK (2xx), não espere JSON, apenas retorne sucesso ou a mensagem de texto
+        const successMessage = await response.text(); // Lê a resposta como texto
+        return { success: true, message: successMessage };
     } catch (error) {
         console.error("Erro ao salvar visitante:", error);
         throw error;
@@ -113,9 +116,10 @@ export async function deletarVisitante(id) {
     try {
         const response = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
         if (!response.ok) {
-            throw new Error(`Erro ao deletar visitante: ${response.status} ${response.statusText}`);
+            const text = await response.text(); // Lê a resposta de erro como texto
+            throw new Error(`Erro ao deletar visitante: ${response.status} ${response.statusText} - ${text}`);
         }
-        return true;
+        return { success: true, message: "Visitante deletado com sucesso!" };
     } catch (error) {
         console.error("Erro ao deletar visitante:", error);
         throw error;

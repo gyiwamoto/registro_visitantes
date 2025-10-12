@@ -1,6 +1,7 @@
 package com.condominio.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore; // Importar JsonIgnore
 import java.util.List;
 
 @Entity
@@ -20,6 +21,7 @@ public class Morador {
     private Condominio condominio;
 
     // Relacionamento opcional com visitantes
+    @JsonIgnore // Ignora este campo na serialização JSON para evitar referência circular
     @OneToMany(mappedBy = "morador", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Visitante> visitantes;
 
