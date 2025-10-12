@@ -32,6 +32,12 @@
         </div>
 
         <div class="mb-3">
+            <label for="documento" class="form-label">Documento:</label>
+            <input type="text" id="documento" class="form-control" autocomplete="off" required>
+            <div class="invalid-feedback">Por favor, insira o documento.</div>
+        </div>
+
+        <div class="mb-3">
             <label for="condominio" class="form-label">Empresa/Condomínio:</label>
             <input type="text" id="condominio" class="form-control" autocomplete="off">
         </div>
@@ -96,6 +102,97 @@
 <script type="module" src="script_moradores.js"></script>
 <script type="module" src="script.js"></script>
 
+<script type="module">
+// ----------------------------
+// Funções de login e formulário
+// ----------------------------
+function verificarLogin() {
+    if (sessionStorage.getItem("logado") !== "true") {
+        window.location.href = "login.html";
+    }
+}
+
+function logout() {
+    sessionStorage.removeItem("logado");
+    window.location.href = "login.html";
+}
+
+function limparFormulario() {
+    document.getElementById('visitanteForm').reset();
+    document.getElementById('telefoneVisitado').value = '';
+}
+
+// ----------------------------
+// Inicializa selects e listeners
+// ----------------------------
+window.addEventListener('DOMContentLoaded', () => {
+    verificarLogin();
+    limparFormulario();
+
+    // Preenche select de casas
+    const selectCasa = document.getElementById('morador');
+    if (selectCasa && window.moradores) {
+        selectCasa.innerHTML = '<option value="">Selecione a casa</option>';
+        window.moradores.forEach(c => {
+            const option = document.createElement('option');
+            option.value = c[0];
+            option.text = c[0];
+            selectCasa.appendChild(option);
+        });
+    }
+
+    // Atualiza moradores ao mudar a casa
+    selectCasa?.addEventListener('change', () => {
+        const selectMorador = document.getElementById('visitadoNome');
+        const casaSelecionada = selectCasa.value;
+        window.popularMoradores(casaSelecionada, selectMorador);
+        document.getElementById('telefoneVisitado').value = '';
+    });
+
+    // Atualiza telefone ao selecionar morador
+    document.getElementById('visitadoNome')?.addEventListener('change', function() {
+        const casa = document.getElementById('morador').value;
+        const nome = this.value;
+        document.getElementById('telefoneVisitado').value = window.obterTelefone(casa, nome);
+    });
+
+    // Cancelar botão
+    document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
+
+    // Formulário: salvar visitante
+    const form = document.getElementById('visitanteForm');
+    form?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const { salvarVisitante } = await import('./apiVisitantes.js');
+
+        const formData = {
+            nome: document.getElementById('nome').value.trim(),
+            cpf: document.getElementById('cpf').value.trim(),
+            documento: document.getElementById('documento').value.trim(), // Adicionado: Campo documento
+            empresa: document.getElementById('condominio').value.trim(),
+            contato: document.getElementById('contato').value.trim(),
+            endereco: document.getElementById('endereco').value.trim(),
+            dataVisita: document.getElementById('dataVisita').value,
+            razaoVisita: document.getElementById('razao').value.trim(),
+            numeroCasa: document.getElementById('morador').value,
+            nomeVisitado: document.getElementById('visitadoNome').value,
+            telefoneVisitado: document.getElementById('telefoneVisitado').value,
+            autorizador: document.getElementById('autorizador').value.trim()
+        };
+
+        try {
+            await salvarVisitante(formData);
+            document.getElementById('mensagem').innerHTML = 
+                `<div class="alert alert-success">Visitante salvo com sucesso!</div>`;
+            limparFormulario();
+        } catch (error) {
+            document.getElementById('mensagem').innerHTML = 
+                `<div class="alert alert-danger">Erro ao salvar visitante: ${error.message}</div>`;
+            console.error(error);
+        }
+    });
+});
+</script>
 
 </body>
 </html>

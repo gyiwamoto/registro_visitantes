@@ -163,17 +163,20 @@ async function salvarVisitante(event) {
     }
 
     const visitante = {
-        nome: document.getElementById('nome')?.value || '',
-        cpf: document.getElementById('cpf')?.value || '',
-        condominio: document.getElementById('condominio')?.value || '',
-        contato: document.getElementById('contato')?.value || '',
-        endereco: document.getElementById('endereco')?.value || '',
-        dataVisita: document.getElementById('dataVisita')?.value || '',
-        razao: document.getElementById('razao')?.value || '',
-        morador: document.getElementById('morador')?.value || '',
-        visitadoNome: document.getElementById('visitadoNome')?.value || '',
-        telefoneVisitado: document.getElementById('telefoneVisitado')?.value || '',
-        autorizador: autorizador
+        nome: document.getElementById("nome").value.trim(),
+        cpf: document.getElementById("cpf").value.trim(),
+        documento: document.getElementById("documento").value.trim(), // Novo campo
+        empresa: document.getElementById("condominio").value.trim(), // Mapeado para 'empresa'
+        contato: document.getElementById("contato").value.trim(),
+        endereco: document.getElementById("endereco").value.trim(),
+        dataVisita: document.getElementById("dataVisita").value,
+        razaoVisita: document.getElementById("razao").value.trim(), // Mapeado para 'razaoVisita'
+        numeroCasa: document.getElementById("morador").value, // Mapeado para 'numeroCasa'
+        nomeVisitado: document.getElementById("visitadoNome").value,
+        telefoneVisitado: document.getElementById("telefoneVisitado").value,
+        autorizador: document.getElementById("autorizadorInput").classList.contains("d-none") 
+                     ? document.getElementById("autorizadorSelect").value
+                     : document.getElementById("autorizadorInput").value.trim()
     };
 
     try {
