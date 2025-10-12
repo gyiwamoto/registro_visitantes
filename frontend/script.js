@@ -56,67 +56,46 @@ function limparFormulario() {
 }
 
 // =======================
-// Bloco: Atualizar select de moradores por casa
+// Atualizar select de moradores e telefone automaticamente
 // =======================
 
-document.getElementById("morador")?.addEventListener("change", function() {
-    const casaSelecionada = this.value; // pega o valor selecionado
-    const casa = window.moradores.find(c => c[0] === casaSelecionada);
-
-    console.log("Casa selecionada:", casa);
-
-    const selectMoradores = document.getElementById("visitadoNome");
-    if (!selectMoradores) return;
-
-    // limpa opções anteriores e adiciona opção padrão
-    selectMoradores.innerHTML = '<option value="">Selecione o morador</option>';
-
-    if (casa && casa.length > 1) {
-        // adiciona cada morador como option
-        casa.slice(1).forEach(morador => {
-            const option = document.createElement("option");
-            option.value = morador.nome;
-            option.textContent = morador.nome;
-            selectMoradores.appendChild(option);
-        });
-    }
-
-    // limpa telefone do visitado
-    const telefoneInput = document.getElementById("telefoneVisitado");
-    if (telefoneInput) telefoneInput.value = '';
-});
-
-// =======================
-// Atualizar telefone ao selecionar morador
-// =======================
 document.addEventListener("DOMContentLoaded", () => {
+    const selectCasa = document.getElementById("morador");
     const selectVisitado = document.getElementById("visitadoNome");
-    const selectMorador = document.getElementById("morador");
     const telefoneInput = document.getElementById("telefoneVisitado");
 
-    if (!selectVisitado || !selectMorador || !telefoneInput) return;
+    if (!selectCasa || !selectVisitado || !telefoneInput || !window.moradores) return;
 
-    selectVisitado.addEventListener("change", function() {
-        const casaSelecionada = selectMorador.value;
-        const moradorSelecionado = this.value;
-
+    // Quando muda a casa, preenche o select de moradores
+    selectCasa.addEventListener("change", () => {
+        const casaSelecionada = selectCasa.value;
+        selectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
         telefoneInput.value = "";
-
-        if (!casaSelecionada || !moradorSelecionado || !window.moradores) return;
 
         const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
         if (!casa) return;
 
-        // suporta moradores como objetos {nome, telefone} ou strings simples
-        const morador = casa.slice(1).find(m => {
-            if (typeof m === "string") return m === moradorSelecionado;
-            if (typeof m === "object") return m.nome === moradorSelecionado;
-            return false;
+        casa.slice(1).forEach(m => {
+            if (m && m.nome) {
+                const opt = document.createElement("option");
+                opt.value = m.nome;
+                opt.textContent = m.nome;
+                selectVisitado.appendChild(opt);
+            }
         });
+    });
 
-        if (morador) {
-            telefoneInput.value = typeof morador === "string" ? "" : (morador.telefone || "");
-        }
+    // Quando muda o morador, preenche o telefone
+    selectVisitado.addEventListener("change", () => {
+        const casaSelecionada = selectCasa.value;
+        const moradorSelecionado = selectVisitado.value;
+        telefoneInput.value = "";
+
+        const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
+        if (!casa) return;
+
+        const morador = casa.slice(1).find(m => m.nome === moradorSelecionado);
+        if (morador) telefoneInput.value = morador.telefone || "";
     });
 });
 

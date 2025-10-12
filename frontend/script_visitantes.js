@@ -201,12 +201,18 @@ function atualizarMoradores() {
     const selectMorador = document.getElementById('visitadoNome');
     if (!selectMorador) return;
 
+    // limpa opções do select
     selectMorador.innerHTML = '<option value="">Selecione o morador</option>';
 
-    if (!casaSelecionada || !window.moradores) return;
+        // se não há casa selecionada ou lista de moradores, cria campo manual de autorizador
+    if (!casaSelecionada || !window.moradores) {
+        atualizarAutorizador();
+        return;
+    }
 
-    const idCasa = casaSelecionada.replace('C','');
-    const casa = window.moradores.find(c => c[0] === idCasa);
+       // Corrigido: usa o ID completo (C1, C2, C11, etc.)
+    
+    const casa = window.moradores.find(c => c[0].toLowerCase() === casaSelecionada.toLowerCase());
     if (casa) {
         casa.slice(1).forEach(morador => {
             const option = document.createElement('option');
@@ -216,7 +222,11 @@ function atualizarMoradores() {
         });
     }
 
-    document.getElementById('telefoneVisitado').value = '';
+    // Limpa o telefone do morador
+    document.getElementById('telefoneVisitado');
+    if (telefoneInput) telefoneInput.value = '';
+
+    // Atualiza campo de autorizador
     atualizarAutorizador();
 }
 
@@ -228,8 +238,15 @@ function atualizarAutorizador() {
     const container = document.getElementById('autorizadorContainer');
     if (!container) return;
 
-    container.innerHTML = '';
+    // Remove input antigo, se existir
+    const oldInput = document.getElementById('autorizadorInput');
+    if (oldInput) oldInput.remove();
 
+    // Remove select antigo, se existir
+    const oldSelect = document.getElementById('autorizadorSelect');
+    if (oldSelect) oldSelect.remove();
+
+    // Se não há casa selecionada, cria input manual editável
     if (!casaSelecionada || !window.moradores) {
         const input = document.createElement('input');
         input.type = 'text';
@@ -240,10 +257,11 @@ function atualizarAutorizador() {
         return;
     }
 
-    const idCasa = casaSelecionada.replace('C','');
-    const casa = window.moradores.find(c => c[0] === idCasa);
+        // Busca a casa pelo ID completo (C1, C2...)
+    const casa = window.moradores.find(c => c[0].toLowerCase() === casaSelecionada.toLowerCase());
     if (!casa) return;
 
+     // Cria select com moradores
     const select = document.createElement('select');
     select.id = 'autorizadorSelect';
     select.className = 'form-select';
@@ -273,6 +291,7 @@ function atualizarAutorizador() {
     inputOutro.style.display = 'none';
     container.appendChild(inputOutro);
 
+     // Alterna visibilidade do input quando "Outro" é selecionado
     select.addEventListener('change', () => {
         if (select.value === 'Outro') {
             inputOutro.style.display = 'block';
