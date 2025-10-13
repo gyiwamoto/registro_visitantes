@@ -99,7 +99,7 @@
 </div>
 
 <!-- Scripts -->
-<script type="module" src="script_moradores.js"></script>
+<script src="script_moradores.js"></script>
 <script type="module" src="script.js"></script>
 
 <script type="module">
@@ -141,21 +141,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Atualiza moradores ao mudar a casa
-    selectCasa?.addEventListener('change', () => {
-        const selectMorador = document.getElementById('visitadoNome');
-        const casaSelecionada = selectCasa.value;
-        window.popularMoradores(casaSelecionada, selectMorador);
-        document.getElementById('telefoneVisitado').value = '';
-    });
-
-    // Atualiza telefone ao selecionar morador
-    document.getElementById('visitadoNome')?.addEventListener('change', function() {
-        const casa = document.getElementById('morador').value;
-        const nome = this.value;
-        document.getElementById('telefoneVisitado').value = window.obterTelefone(casa, nome);
-    });
-
+ 
     // Cancelar botão
     document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
 

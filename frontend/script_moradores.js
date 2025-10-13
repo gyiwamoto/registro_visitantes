@@ -33,11 +33,13 @@ window.moradores = [
 // Função auxiliar: obter telefone do morador pelo nome e número da casa
 // =====================================================
 window.obterTelefone = function(numeroCasa, nomeMorador) {
+    numeroCasa = numeroCasa.toUpperCase().startsWith('C') ? numeroCasa.toUpperCase() : 'C' + numeroCasa;
     const casa = window.moradores.find(c => c[0] === numeroCasa);
     if (!casa) return "";
     const morador = casa.slice(1).find(m => m.nome === nomeMorador);
     return morador ? morador.telefone : "";
 };
+
 
 // =====================================================
 // Função para popular o dropdown de moradores de acordo com a casa

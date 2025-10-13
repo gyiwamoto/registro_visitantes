@@ -59,55 +59,34 @@ function limparFormulario() {
 // Atualizar select de moradores e telefone automaticamente
 // =======================
 
-document.addEventListener("DOMContentLoaded", () => {
-    const selectCasa = document.getElementById("morador");
-    const selectVisitado = document.getElementById("visitadoNome");
-    const telefoneInput = document.getElementById("telefoneVisitado");
+// Inicializa flag global para controlar listeners
+window.listenersAtivos = window.listenersAtivos || {};
 
-    if (!selectCasa || !selectVisitado || !telefoneInput || !window.moradores) return;
+const moradorSelect = document.getElementById('morador');
+if (moradorSelect && !window.listenersAtivos.morador) {
+    moradorSelect.addEventListener('change', atualizarMoradores);
+    window.listenersAtivos.morador = true;
+}
 
-     // Remove listeners antigos se existirem
-    selectCasa.replaceWith(selectCasa.cloneNode(true));
-    selectVisitado.replaceWith(selectVisitado.cloneNode(true));
-    telefoneInput.replaceWith(telefoneInput.cloneNode(true));
 
-     // Re-referenciar após remoção
-    const newSelectCasa = document.getElementById("morador");
-    const newSelectVisitado = document.getElementById("visitadoNome");   
-    const newTelefoneInput = document.getElementById("telefoneVisitado"); 
 
-    // Quando muda a casa, preenche o select de moradores
-    newSelectCasa.addEventListener("change", () => {
-        const casaSelecionada = newSelectCasa.value;
-        newSelectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
-        newTelefoneInput.value = "";
 
-        const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
-        if (!casa) return;
+const visitadoSelect = document.getElementById("visitadoNome");
+if (visitadoSelect && !window.listenersAtivos.visitadoNome) {
+    visitadoSelect.addEventListener("change", () => {
+        const moradorSelecionado = visitadoSelect.value;
+        const casaSelecionada = document.getElementById("morador").value;
+        const telefoneInput = document.getElementById("telefoneVisitado");
 
-        casa.slice(1).forEach(m => {
-            if (m && m.nome) {
-                const opt = document.createElement("option");
-                opt.value = m.nome;
-                opt.textContent = m.nome;
-                newselectVisitado.appendChild(opt);
-            }
-        });
-    });
-
-    // Quando muda o morador, preenche o telefone
-    newSelectVisitado.addEventListener("change", () => {
-        const casaSelecionada = newSelectCasa.value;
-        const moradorSelecionado = newSelectVisitado.value;
-        newtelefoneInput.value = "";
-
+        telefoneInput.value = "";
         const casa = window.moradores.find(c => String(c[0]) === String(casaSelecionada));
         if (!casa) return;
 
         const morador = casa.slice(1).find(m => m.nome === moradorSelecionado);
-        if (morador) newtelefoneInput.value = morador.telefone || "";
+        if (morador) telefoneInput.value = morador.telefone || "";
     });
-});
+    window.listenersAtivos.visitadoNome = true;
+}
 
 
 // Atualiza campo do autorizador ao escolher do select
@@ -122,6 +101,25 @@ document.getElementById("autorizadorSelect")?.addEventListener("change", functio
         input.value = this.value;
     }
 });
+
+// ----------------------------
+// ADIÇÃO: Listener para popular moradores ao selecionar uma casa
+// ----------------------------
+const casaSelect = document.getElementById('morador');
+const visitadoSelect = document.getElementById('visitadoNome');
+
+if (casaSelect) {
+    casaSelect.addEventListener('change', () => {
+        const numeroCasa = casaSelect.value;
+
+        // Preenche select de moradores da casa
+        window.popularMoradores(numeroCasa, visitadoSelect);
+
+        // Limpa telefone do visitado
+        document.getElementById('telefoneVisitado').value = '';
+    });
+}
+
 
 // =======================
 // Envio do formulário
