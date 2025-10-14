@@ -10,6 +10,11 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
           crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <!-- Carregue primeiro a lista e funções dos moradores -->
+    <script type="module" src="script_moradores.js"></script>
+
+    <!-- Depois carregue o script principal do sistema -->
+    <script type="module" src="script.js"></script>
 </head>
 <body>
 
@@ -141,7 +146,42 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
- 
+ // Listener para preencher select de moradores ao mudar a casa
+document.getElementById('morador')?.addEventListener('change', function() {
+    const numeroCasa = this.value;
+    const selectVisitado = document.getElementById('visitadoNome');
+    selectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
+
+    if (!numeroCasa || !window.moradores) return;
+    const casa = window.moradores.find(c => c[0] === numeroCasa);
+    if (!casa) return;
+
+    casa.slice(1).forEach(morador => {
+        const option = document.createElement('option');
+        option.value = morador.nome;
+        option.text = morador.nome;
+        selectVisitado.appendChild(option);
+    });
+});
+
+// Listener para preencher telefone ao mudar o nome do visitado
+document.getElementById('visitadoNome')?.addEventListener('change', function() {
+    const numeroCasa = document.getElementById('morador').value;
+    const nomeMorador = this.value;
+    const telefoneInput = document.getElementById('telefoneVisitado');
+    telefoneInput.value = "";
+
+    if (!numeroCasa || !nomeMorador) return;
+    if (!window.moradores) return;
+
+    const casa = window.moradores.find(c => c[0] === numeroCasa);
+    if (!casa) return;
+
+    const morador = casa.slice(1).find(m => m.nome === nomeMorador);
+    if (morador) telefoneInput.value = morador.telefone;
+});
+
+
     // Cancelar botão
     document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
 
