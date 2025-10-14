@@ -146,8 +146,7 @@
 
         if (!casaSelecionada || !window.moradores) return;
 
-        const idCasa = casaSelecionada.replace('C','');
-        const casa = window.moradores.find(c => c[0] === idCasa);
+        const casa = window.moradores.find(c => c[0] === casaSelecionada);
         if (casa) {
             casa.slice(1).forEach(morador => {
                 if (morador && morador.nome) {
@@ -171,85 +170,26 @@
         document.getElementById('telefoneVisitado').value = '';
     }
 
-    document.getElementById('visitadoNome')?.addEventListener('change', function() {
-        const casaSelecionada = document.getElementById('morador').value;
-        const moradorSelecionado = this.value;
-        const telefoneInput = document.getElementById('telefoneVisitado');
-        telefoneInput.value = '';
+    // ================================
+    // REMOVIDOS OS LISTENERS DUPLICADOS ABAIXO:
+    // ================================
+    // Eles não devem existir neste arquivo! Só no script.js!
 
-        if (!casaSelecionada || !moradorSelecionado || !window.moradores) return;
+    // document.getElementById('morador')?.addEventListener('change', atualizarMoradores);
 
-        const idCasa = casaSelecionada.replace('C','');
-        const casa = window.moradores.find(c => c[0] === idCasa);
-        if (casa) {
-            const morador = casa.slice(1).find(m => m.nome === moradorSelecionado);
-            if (morador && morador.telefone) {
-                telefoneInput.value = morador.telefone;
-            }
-        }
-    });
+    // document.getElementById('visitadoNome')?.addEventListener('change', function() { ... });
 
-    document.getElementById('morador')?.addEventListener('change', atualizarMoradores);
-    document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
+    // document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
 
-    document.getElementById('autorizadorSelect')?.addEventListener('change', function() {
-        const input = document.getElementById('autorizadorInput');
-        if (this.value === 'Outro') {
-            input.classList.remove('d-none');
-            input.focus();
-        } else {
-            input.classList.add('d-none');
-            input.value = '';
-        }
-    });
+    // document.getElementById('autorizadorSelect')?.addEventListener('change', function() { ... });
+
+    // document.getElementById('visitanteForm')?.addEventListener('submit', async function(event) { ... });
 
     document.getElementById('telefoneVisitado').removeAttribute('readonly');
     document.getElementById('telefoneVisitado').disabled = false;
 
-    // =========================
-    // Adiciona funcionalidade ao botão Salvar
-    // =========================
-    document.getElementById('visitanteForm')?.addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const visitante = {
-            nome: document.getElementById('nome').value,
-            cpf: document.getElementById('cpf').value,
-            condominio: document.getElementById('condominio').value,
-            contato: document.getElementById('contato').value,
-            endereco: document.getElementById('endereco').value,
-            dataVisita: document.getElementById('dataVisita').value,
-            razao: document.getElementById('razao').value,
-            morador: document.getElementById('morador').value,
-            visitadoNome: document.getElementById('visitadoNome').value,
-            telefoneVisitado: document.getElementById('telefoneVisitado').value,
-            autorizador: document.getElementById('autorizadorSelect').value === 'Outro'
-                ? document.getElementById('autorizadorInput').value
-                : document.getElementById('autorizadorSelect').value
-        };
-
-        try {
-            const response = await salvarVisitante(visitante);
-            const msgDiv = document.getElementById('mensagem');
-            if (response && response.id) {
-                msgDiv.textContent = 'Visitante salvo com sucesso!';
-                msgDiv.classList.remove('text-danger');
-                msgDiv.classList.add('text-success');
-                limparFormulario();
-            } else {
-                msgDiv.textContent = 'Erro ao salvar visitante.';
-                msgDiv.classList.remove('text-success');
-                msgDiv.classList.add('text-danger');
-            }
-        } catch (error) {
-            console.error(error);
-            const msgDiv = document.getElementById('mensagem');
-            msgDiv.textContent = 'Erro ao salvar visitante.';
-            msgDiv.classList.remove('text-success');
-            msgDiv.classList.add('text-danger');
-        }
-    });
+    // As funções acima podem ser usadas pelo script.js,
+    // mas os listeners devem ser adicionados só no script.js.
 </script>
 </body>
 </html>
-
