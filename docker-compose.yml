@@ -15,6 +15,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - visitantes-net
+    
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com # Altere para seu e-mail
+      PGADMIN_DEFAULT_PASSWORD: admin        # Altere para sua senha
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80" # Acessível em http://localhost:5050
+    depends_on:
+      - db # O PgAdmin depende do serviço de banco de dados
+    networks:
+      - visitantes-net
+    volumes:
+      # Volume opcional para persistir a configuração do PgAdmin
+      - pgadmin_data:/var/lib/pgadmin
 
   backend:
     build:
@@ -48,6 +66,7 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:
 
 networks:
   visitantes-net:

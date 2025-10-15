@@ -1,7 +1,7 @@
 // =======================
 // URL da API
 // =======================
-const apiUrl = 'http://localhost:8080/visitantes';
+const apiUrl = 'http://localhost:8080/api/visitantes';
 
 // =======================
 // Exibir mensagens
@@ -43,9 +43,17 @@ async function listarVisitantes(filtroCasa = '', filtroData = '') {
         visitantes.forEach(v => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${v.morador || ''}</td>
+                <td>${v.id || ''}</td>
+                <td>${v.nome || ''}</td>
+                <td>${v.cpf || ''}</td>
+                <td>${v.empresa || ''}</td>
+                <td>${v.contato || ''}</td>
+                <td>${v.endereco || ''}</td>
                 <td>${v.dataVisita || ''}</td>
-                <td>${v.razao || ''}</td>
+                <td>${v.razaoVisita || ''}</td>
+                <td>${v.numeroCasa || ''}</td>
+                <td>${v.nomeVisitado || ''}</td>
+                <td>${v.telefoneVisitado || ''}</td>
                 <td>${v.autorizador || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-warning me-2" onclick="editarVisitante(${v.id})">Editar</button>
@@ -120,3 +128,8 @@ document.getElementById('btnListarVisitantes')?.addEventListener('click', () => 
 window.addEventListener('DOMContentLoaded', () => {
     listarVisitantes();
 });
+
+// Expor funções globalmente para acesso via onclick no HTML
+window.listarVisitantes = listarVisitantes;
+window.deletarVisitante = deletarVisitante;
+window.editarVisitante = editarVisitante;

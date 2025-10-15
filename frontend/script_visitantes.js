@@ -1,7 +1,7 @@
 // =======================
 // URL da API
 // =======================
-const apiUrl = 'http://localhost:8080/visitantes';
+const apiUrl = 'http://localhost:8080/api/visitantes';
 
 // =======================
 // Função para exibir mensagens
@@ -41,106 +41,6 @@ function limparFormulario() {
     if (mensagemEl) mensagemEl.innerText = '';
     atualizarMoradores(); // limpa o select de visitadoNome
     atualizarAutorizador(); // limpa select/input de autorizador
-}
-
-// =======================
-// Função para listar visitantes
-// =======================
-async function listarVisitantes(filtroCasa = '', filtroData = '') {
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Falha na comunicação com o servidor.');
-
-        let visitantes = await response.json();
-
-        // Aplicar filtros
-        if (filtroCasa) {
-            visitantes = visitantes.filter(v => v.morador && v.morador.toLowerCase().includes(filtroCasa.toLowerCase()));
-        }
-        if (filtroData) {
-            visitantes = visitantes.filter(v => v.dataVisita === filtroData);
-        }
-
-        const tbody = document.querySelector('#tabelaVisitantes tbody');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-
-        visitantes.forEach(v => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${v.id || ''}</td>
-                <td>${v.nome || ''}</td>
-                <td>${v.cpf || ''}</td>
-                <td>${v.condominio || ''}</td>
-                <td>${v.contato || ''}</td>
-                <td>${v.endereco || ''}</td>
-                <td>${v.dataVisita || ''}</td>
-                <td>${v.razao || ''}</td>
-                <td>${v.morador || ''}</td>
-                <td>${v.visitadoNome || ''}</td>
-                <td>${v.telefoneVisitado || ''}</td>
-                <td>${v.autorizador || ''}</td>
-                <td>
-                    <button class="btn btn-sm btn-warning me-2" onclick="editarVisitante(${v.id})">Editar</button>
-                    <button class="btn btn-sm btn-danger" onclick="deletarVisitante(${v.id})">Deletar</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        exibirMensagem(`✅ Listados ${visitantes.length} visitantes`, 'success');
-    } catch (error) {
-        console.error(error);
-        exibirMensagem('❌ Erro ao listar visitantes!', 'error');
-    }
-}
-
-// =======================
-// Função para deletar visitante
-// =======================
-async function deletarVisitante(id) {
-    if (!confirm('Deseja realmente deletar este visitante?')) return;
-
-    try {
-        const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-        if (!response.ok) throw new Error('Falha ao deletar visitante');
-
-        listarVisitantes();
-        exibirMensagem('✅ Visitante deletado com sucesso!', 'success');
-    } catch (error) {
-        console.error(error);
-        exibirMensagem('❌ Erro ao deletar visitante!', 'error');
-    }
-}
-
-// =======================
-// Função para editar visitante
-// =======================
-async function editarVisitante(id) {
-    try {
-        const response = await fetch(`${apiUrl}/${id}`);
-        if (!response.ok) throw new Error('Falha ao buscar visitante');
-
-        const visitanteExistente = await response.json();
-
-        const nome = prompt('Novo nome:', visitanteExistente.nome);
-        if (nome === null) return;
-
-        const dadosAtualizados = { ...visitanteExistente, nome };
-
-        const responsePut = await fetch(`${apiUrl}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosAtualizados)
-        });
-        if (!responsePut.ok) throw new Error('Falha ao editar visitante');
-
-        listarVisitantes();
-        exibirMensagem('✅ Visitante atualizado com sucesso!', 'success');
-    } catch (error) {
-        console.error(error);
-        exibirMensagem('❌ Erro ao editar visitante!', 'error');
-    }
 }
 
 // =======================
@@ -187,7 +87,8 @@ async function salvarVisitante(event) {
         });
         if (!response.ok) throw new Error('Falha ao salvar visitante');
 
-        listarVisitantes();
+        // As funções de listagem e edição estão agora em script_lista_visitantes.js
+        // Não chame listarVisitantes() aqui para evitar chamadas duplicadas
         limparFormulario();
         exibirMensagem('✅ Visitante cadastrado com sucesso!', 'success');
     } catch (error) {
@@ -337,7 +238,8 @@ document.getElementById('morador')?.addEventListener('change', atualizarMoradore
 document.getElementById('btnListarVisitantes')?.addEventListener('click', () => {
     const filtroCasa = document.getElementById('filtroCasa')?.value || '';
     const filtroData = document.getElementById('filtroData')?.value || '';
-    listarVisitantes(filtroCasa, filtroData);
+    // A função listarVisitantes está agora em script_lista_visitantes.js e exposta globalmente
+    window.listarVisitantes(filtroCasa, filtroData);
 });
 
 // =======================
@@ -349,7 +251,8 @@ document.getElementById('visitanteForm')?.addEventListener('submit', salvarVisit
 // Inicializa lista ao carregar a página
 // =======================
 window.addEventListener('DOMContentLoaded', () => {
-    listarVisitantes();
+    // A função listarVisitantes está agora em script_lista_visitantes.js e exposta globalmente
+    window.listarVisitantes();
 });
 
 
