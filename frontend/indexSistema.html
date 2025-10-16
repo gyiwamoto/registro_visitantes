@@ -89,8 +89,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="autorizador" class="form-label">Autorizador:</label>
-            <input type="text" id="autorizador" class="form-control">
+            <label for="autorizadorContainer" class="form-label">Autorizador:</label>
+            <div id="autorizadorContainer"></div>
         </div>
 
         <div class="d-flex gap-2 mb-3">
@@ -106,119 +106,6 @@
 <!-- Scripts -->
 <script src="script_moradores.js"></script>
 <script type="module" src="script.js"></script>
-
-<script type="module">
-// ----------------------------
-// Funções de login e formulário
-// ----------------------------
-function verificarLogin() {
-    if (sessionStorage.getItem("logado") !== "true") {
-        window.location.href = "login.html";
-    }
-}
-
-function logout() {
-    sessionStorage.removeItem("logado");
-    window.location.href = "login.html";
-}
-
-function limparFormulario() {
-    document.getElementById('visitanteForm').reset();
-    document.getElementById('telefoneVisitado').value = '';
-}
-
-// ----------------------------
-// Inicializa selects e listeners
-// ----------------------------
-window.addEventListener('DOMContentLoaded', () => {
-    verificarLogin();
-    limparFormulario();
-
-    // Preenche select de casas
-    const selectCasa = document.getElementById('morador');
-    if (selectCasa && window.moradores) {
-        selectCasa.innerHTML = '<option value="">Selecione a casa</option>';
-        window.moradores.forEach(c => {
-            const option = document.createElement('option');
-            option.value = c[0];
-            option.text = c[0];
-            selectCasa.appendChild(option);
-        });
-    }
-
- // Listener para preencher select de moradores ao mudar a casa
-document.getElementById('morador')?.addEventListener('change', function() {
-    const numeroCasa = this.value;
-    const selectVisitado = document.getElementById('visitadoNome');
-    selectVisitado.innerHTML = '<option value="">Selecione o morador</option>';
-
-    if (!numeroCasa || !window.moradores) return;
-    const casa = window.moradores.find(c => c[0] === numeroCasa);
-    if (!casa) return;
-
-    casa.slice(1).forEach(morador => {
-        const option = document.createElement('option');
-        option.value = morador.nome;
-        option.text = morador.nome;
-        selectVisitado.appendChild(option);
-    });
-});
-
-// Listener para preencher telefone ao mudar o nome do visitado
-document.getElementById('visitadoNome')?.addEventListener('change', function() {
-    const numeroCasa = document.getElementById('morador').value;
-    const nomeMorador = this.value;
-    const telefoneInput = document.getElementById('telefoneVisitado');
-    telefoneInput.value = "";
-
-    if (!numeroCasa || !nomeMorador) return;
-    if (!window.moradores) return;
-
-    const casa = window.moradores.find(c => c[0] === numeroCasa);
-    if (!casa) return;
-
-    const morador = casa.slice(1).find(m => m.nome === nomeMorador);
-    if (morador) telefoneInput.value = morador.telefone;
-});
-
-
-    // Cancelar botão
-    document.getElementById('cancelar-btn')?.addEventListener('click', limparFormulario);
-
-    // Formulário: salvar visitante
-    const form = document.getElementById('visitanteForm');
-    form?.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const { salvarVisitante } = await import('./apiVisitantes.js');
-
-        const formData = {
-            nome: document.getElementById('nome').value.trim(),
-            cpf: document.getElementById('cpf').value.trim(),
-            documento: document.getElementById('documento').value.trim(), // Adicionado: Campo documento
-            empresa: document.getElementById('condominio').value.trim(),
-            contato: document.getElementById('contato').value.trim(),
-            endereco: document.getElementById('endereco').value.trim(),
-            dataVisita: document.getElementById('dataVisita').value,
-            razaoVisita: document.getElementById('razao').value.trim(),
-            numeroCasa: document.getElementById('morador').value,
-            nomeVisitado: document.getElementById('visitadoNome').value,
-            telefoneVisitado: document.getElementById('telefoneVisitado').value,
-            autorizador: document.getElementById('autorizador').value.trim()
-        };
-
-        try {
-            await salvarVisitante(formData);
-            document.getElementById('mensagem').innerHTML = 
-                `<div class="alert alert-success">Visitante salvo com sucesso!</div>`;
-            limparFormulario();
-        } catch (error) {
-            document.getElementById('mensagem').innerHTML = 
-                `<div class="alert alert-danger">Erro ao salvar visitante: ${error.message}</div>`;
-            console.error(error);
-        }
-    });
-});
-</script>
 
 </body>
 </html>

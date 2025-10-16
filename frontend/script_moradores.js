@@ -52,6 +52,9 @@ window.popularMoradores = function(numeroCasa, selectElement) {
 
     if (!numeroCasa) return;
 
+    // Normaliza numeroCasa para garantir a comparação correta
+    numeroCasa = String(numeroCasa).trim().toUpperCase();
+
     const casa = window.moradores.find(c => c[0] === numeroCasa);
     if (!casa) return;
 
@@ -68,6 +71,70 @@ window.popularMoradores = function(numeroCasa, selectElement) {
         option.text = morador.nome;
         selectElement.appendChild(option);
     });
+};
+
+// =====================================================
+// Função para popular o dropdown de autorizador de acordo com a casa
+// =====================================================
+window.popularAutorizador = function(numeroCasa) {
+    const container = document.getElementById('autorizadorContainer');
+    if (!container) return;
+
+    // Remove antigos
+    while (container.firstChild) container.removeChild(container.firstChild);
+
+    // Se não há casa, mostra só input
+    if (!numeroCasa || !window.moradores) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'autorizadorInput';
+        input.className = 'form-control';
+        input.placeholder = 'Digite o nome do autorizador';
+        container.appendChild(input);
+        return;
+    }
+
+    // Cria select de autorizador
+    const casa = window.moradores.find(c => c[0] === numeroCasa);
+    const select = document.createElement('select');
+    select.id = 'autorizadorSelect';
+    select.className = 'form-select';
+    select.innerHTML = '<option value="">Selecione o autorizador</option>';
+    if (casa) {
+        casa.slice(1).forEach(morador => {
+            const option = document.createElement("option");
+            option.value = morador.nome;
+            option.text = morador.nome;
+            select.appendChild(option);
+        });
+    }
+    const outro = document.createElement('option');
+    outro.value = 'Outro';
+    outro.text = 'Outro';
+    select.appendChild(outro);
+
+    // Input para "Outro"
+    const inputOutro = document.createElement('input');
+    inputOutro.type = 'text';
+    inputOutro.id = 'autorizadorInput';
+    inputOutro.className = 'form-control mt-1';
+    inputOutro.placeholder = 'Digite o nome do autorizador';
+    inputOutro.style.display = 'none';
+
+    // Listener único para select
+    select.addEventListener('change', function() {
+        if (select.value === 'Outro') {
+            inputOutro.style.display = 'block';
+            inputOutro.value = '';
+            inputOutro.focus();
+        } else {
+            inputOutro.style.display = 'none';
+            inputOutro.value = select.value;
+        }
+    });
+
+    container.appendChild(select);
+    container.appendChild(inputOutro);
 };
 
 // =====================================================

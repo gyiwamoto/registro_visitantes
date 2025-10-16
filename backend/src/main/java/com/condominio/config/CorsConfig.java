@@ -17,7 +17,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         // Lista explícita de origens permitidas
-        config.setAllowedOriginPatterns(List.of("http://localhost:5500", "http://127.0.0.1:5500", "http://localhost:8081")); // ajuste a porta se necessário
+        config.setAllowedOriginPatterns(List.of("http://localhost:5500", "http://127.0.0.1:5500", "http://localhost:8081", "http://136.112.198.40:8081")); // ajuste a porta se necessário
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
