@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template GIF - Sistema Registro Visitantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: white;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .column {
+            flex: 1;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .column h3 {
+            margin-top: 0;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .box {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        /* Cores das colunas */
+        .atores h3 { background: #CC0000; }
+        .frontend h3 { background: #0066CC; }
+        .backend h3 { background: #00AA00; }
+        .database h3 { background: #FF6600; }
+        
+        /* Cores normais */
+        .ator { background: #FFE6E6; border-color: #CC0000; }
+        .frontend-box { background: #E6F3FF; border-color: #0066CC; }
+        .backend-box { background: #E6FFE6; border-color: #00AA00; }
+        .database-box { background: #FFF0E6; border-color: #FF6600; }
+        
+        /* Cor ativa */
+        .ativo { 
+            background: #00FF00 !important; 
+            border-color: #00AA00 !important; 
+            border-width: 4px !important;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            transform: scale(1.05);
+        }
+        
+        /* Setas */
+        .arrows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 15px solid #666;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .arrow.ativo {
+            opacity: 1;
+            border-bottom-color: #00FF00;
+        }
+        
+        .frame-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame-info" id="frameInfo">Frame 1 de 25 - Login: Porteiro Acessa Sistema</div>
+    
+    <div class="controls">
+        <button onclick="previousFrame()" id="prevBtn">← Anterior</button>
+        <button onclick="playAnimation()" id="playBtn">▶ Play Automático</button>
+        <button onclick="stopAnimation()" id="stopBtn" disabled>⏸ Parar</button>
+        <button onclick="nextFrame()" id="nextBtn">Próximo →</button>
+    </div>
+    
+    <div class="container" style="position: relative;">
+        <div class="arrows" id="arrows"></div>
+        
+        <div class="column atores">
+            <h3>👥 ATORES</h3>
+            <div class="box ator" id="visitante">👤<br/>VISITANTE</div>
+            <div class="box ator" id="porteiro">🚪<br/>PORTEIRO</div>
+            <div class="box ator" id="morador">🏠<br/>MORADOR</div>
+            <div class="box ator" id="admin">⚙️<br/>ADMIN</div>
+        </div>
+        
+        <div class="column frontend">
+            <h3>📱 FRONTEND</h3>
+            <div class="box frontend-box" id="login">🔐<br/>login.html</div>
+            <div class="box frontend-box" id="visitantes">📝<br/>visitantes.html</div>
+            <div class="box frontend-box" id="listar">📋<br/>listar_visitantes.html</div>
+            <div class="box frontend-box" id="moradores">👥<br/>moradores.html</div>
+        </div>
+        
+        <div class="column backend">
+            <h3>🔧 BACKEND</h3>
+            <div class="box backend-box" id="visitanteController">🎯<br/>VisitanteController</div>
+            <div class="box backend-box" id="moradorController">🎯<br/>MoradorController</div>
+            <div class="box backend-box" id="authController">🔑<br/>AuthController</div>
+        </div>
+        
+        <div class="column database">
+            <h3>🗄️ DATABASE</h3>
+            <div class="box database-box" id="visitantesDB">📊<br/>visitantes</div>
+            <div class="box database-box" id="moradoresDB">👤<br/>moradores</div>
+            <div class="box database-box" id="usuariosDB">🔐<br/>usuarios</div>
+            <div class="box database-box" id="condominiosDB">🏢<br/>condominios</div>
+        </div>
+    </div>
+
+    <script>
+        let currentFrame = 1;
+        let animationInterval;
+        
+        const frames = [
+            // Login (Frames 1-6)
+            { frame: 1, title: "Login: Porteiro Acessa Sistema", active: ['porteiro'] },
+            { frame: 2, title: "Login: Acessa Página de Login", active: ['login'] },
+            { frame: 3, title: "Login: Processa Autenticação", active: ['authController'] },
+            { frame: 4, title: "Login: Consulta Base de Usuários", active: ['usuariosDB'] },
+            { frame: 5, title: "Login: Retorna Dados de Autenticação", active: ['authController'] },
+            { frame: 6, title: "Login: Confirma Acesso Liberado", active: ['login'] },
+            
+            // Chegada (Frames 7-13)
+            { frame: 7, title: "Chegada: Visitante Solicita Entrada", active: ['visitante'] },
+            { frame: 8, title: "Chegada: Porteiro Recebe Solicitação", active: ['porteiro'] },
+            { frame: 9, title: "Chegada: Abre Formulário de Visitante", active: ['visitantes'] },
+            { frame: 10, title: "Chegada: Carrega Lista de Moradores", active: ['visitanteController'] },
+            { frame: 11, title: "Chegada: Consulta Base de Moradores", active: ['moradoresDB'] },
+            { frame: 12, title: "Chegada: Retorna Lista de Moradores", active: ['visitanteController'] },
+            { frame: 13, title: "Chegada: Formulário Pronto para Uso", active: ['visitantes'] },
+            
+            // Registro (Frames 14-19)
+            { frame: 14, title: "Registro: Porteiro Preenche Dados", active: ['porteiro'] },
+            { frame: 15, title: "Registro: Envia Dados do Visitante", active: ['visitantes'] },
+            { frame: 16, title: "Registro: Processa Dados da Visita", active: ['visitanteController'] },
+            { frame: 17, title: "Registro: Salva no Banco de Dados", active: ['visitantesDB'] },
+            { frame: 18, title: "Registro: Confirma Inserção de Dados", active: ['visitanteController'] },
+            { frame: 19, title: "Registro: Exibe Sucesso - Visitante Liberado", active: ['visitantes'] },
+            
+            // Consulta (Frames 20-25)
+            { frame: 20, title: "Consulta: Porteiro Acessa Lista", active: ['porteiro'] },
+            { frame: 21, title: "Consulta: Carrega Página de Listagem", active: ['listar'] },
+            { frame: 22, title: "Consulta: Busca Visitantes Ativos", active: ['visitanteController'] },
+            { frame: 23, title: "Consulta: Consulta Base de Visitantes", active: ['visitantesDB'] },
+            { frame: 24, title: "Consulta: Retorna Lista de Visitantes", active: ['visitanteController'] },
+            { frame: 25, title: "Consulta: Exibe Lista Completa", active: ['listar'] }
+        ];
+        
+        function updateFrame(frameNum) {
+            // Limpar todos os ativos
+            document.querySelectorAll('.box').forEach(box => {
+                box.classList.remove('ativo');
+            });
+            
+            // Ativar elementos do frame atual
+            const frameData = frames[frameNum - 1];
+            frameData.active.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.classList.add('ativo');
+                }
+            });
+            
+            // Atualizar info do frame
+            document.getElementById('frameInfo').textContent = 
+                `Frame ${frameNum} de 25 - ${frameData.title}`;
+            
+            currentFrame = frameNum;
+            
+            // Atualizar botões
+            document.getElementById('prevBtn').disabled = (currentFrame <= 1);
+            document.getElementById('nextBtn').disabled = (currentFrame >= 25);
+        }
+        
+        function nextFrame() {
+            if (currentFrame < 25) {
+                updateFrame(currentFrame + 1);
+            }
+        }
+        
+        function previousFrame() {
+            if (currentFrame > 1) {
+                updateFrame(currentFrame - 1);
+            }
+        }
+        
+        function playAnimation() {
+            document.getElementById('playBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            
+            animationInterval = setInterval(() => {
+                if (currentFrame < 25) {
+                    nextFrame();
+                } else {
+                    updateFrame(1); // Reinicia a animação
+                }
+            }, 1000); // 1 segundo por frame
+        }
+        
+        function stopAnimation() {
+            clearInterval(animationInterval);
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+        }
+        
+        // Inicializar
+        updateFrame(1);
+        
+        // Controles de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousFrame();
+            if (e.key === 'ArrowRight') nextFrame();
+            if (e.key === ' ') {
+                e.preventDefault();
+                if (document.getElementById('playBtn').disabled) {
+                    stopAnimation();
+                } else {
+                    playAnimation();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
