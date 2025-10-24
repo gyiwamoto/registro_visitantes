@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: gerson
       POSTGRES_PASSWORD: senha123
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -58,7 +58,7 @@ services:
       context: ./frontend
     container_name: registro_visitantes-frontend-v2
     ports:
-      - "80:80"
+      - "8081:80"
     depends_on:
       - backend
     networks:

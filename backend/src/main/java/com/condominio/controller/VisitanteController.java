@@ -51,7 +51,7 @@ public class VisitanteController {
         // Checa CPF duplicado
         if (visitante.getCpf() != null && visitanteRepository.existsByCpf(visitante.getCpf())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Erro: já existe um visitante cadastrado com este CPF.");
+                    .body("CPF já cadastrado!");
         }
 
         // Checa Autorizador duplicado
@@ -60,16 +60,8 @@ public class VisitanteController {
                     .body("Erro: já existe um visitante cadastrado com este Autorizador.");
         }
 
-        // Permitir morador nulo ou apenas garantir que o ID seja convertido corretamente
-        if (visitante.getMorador() != null && visitante.getMorador().getId() != null) {
-            // Se o frontend enviar "C1" ou qualquer string, tenta converter para Long
-            try {
-                String strId = visitante.getMorador().getId().toString().replaceAll("\\D", "");
-                visitante.getMorador().setId(Long.parseLong(strId));
-            } catch (NumberFormatException e) {
-                visitante.setMorador(null); // fallback seguro
-            }
-        }
+        // Forçar morador como nulo para evitar foreign key constraint
+        visitante.setMorador(null);
 
         // Permitir condominio nulo, default para 1
         if (visitante.getCondominio() == null) {

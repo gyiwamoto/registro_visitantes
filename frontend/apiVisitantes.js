@@ -4,7 +4,7 @@
 const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const BASE_URL = isLocalhost
     ? "http://localhost:8080/api/visitantes" // URL para desenvolvimento local
-    : "http://34.68.192.236:8080/api/visitantes"; // URL para produção na nuvem
+    : "http://136.112.198.40:8080/api/visitantes"; // URL para produção na nuvem
 
 // ---------- Salvar visitante ----------
 export async function salvarVisitante(formData) {
