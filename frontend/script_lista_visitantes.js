@@ -1,7 +1,10 @@
 // =======================
 // URL da API
 // =======================
-const apiUrl = 'http://localhost:8080/api/visitantes';
+const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const apiUrl = isLocalhost
+    ? "http://localhost:8080/api/visitantes" // URL para desenvolvimento local
+    : "http://34.68.192.236:8080/api/visitantes"; // URL para produção na nuvem
 
 // =======================
 // Exibir mensagens
